@@ -121,9 +121,16 @@ class KNNClassifier(Classifier):
         :param k: number of nearest-neighbors to be returned
         :return: list of k line indexes referring to the k nearest neighbors of x in X
         """
+
         if(k==None): k=self.k                      # per default use stored k 
         if(X==None): X=self.X                      # per default use stored X
-        return k*[0]                               # REPLACE: Insert/adapt your code from V1A1_KNearestNeighborSearch.py
+
+        sorted_list = np.argsort([np.sum(np.power((x - X[i]), 2)) for i in range(len(X))])
+        return_list = []
+        while k != 0:
+            return_list.append(sorted_list[k])
+            k = k-1
+        return return_list                               # REPLACE: Insert/adapt your code from V1A1_KNearestNeighborSearch.py
 
     def predict(self,x,k=None):
         """ 
@@ -137,8 +144,11 @@ class KNNClassifier(Classifier):
         """
         if k==None: k=self.k                       # use default parameter k?
         idxKNN = self.getKNearestNeighbors(x,k)    # get indexes of k nearest neighbors of x
-        prediction=0                               # REPLACE DUMMY CODE BY YOUR OWN CODE!
-        pClassPosteriori=self.C*[1.0/self.C]       # REPLACE DUMMY CODE BY YOUR OWN CODE!
+        pClassPosteriori = np.zeros(self.C)        # initialise pClassPosteriori with zeros
+        for i in idxKNN:                           # go through every entry in idxKNN
+            pClassPosteriori[i] = pClassPosteriori[i] + 1 #count how often the class is in idxKNN
+        pClassPosteriori = pClassPosteriori / k    # divide through k
+        prediction=max(idxKNN)                      # the most propable class is the one with the most nearest neighbour
         return prediction, pClassPosteriori, idxKNN  # return predicted class, a-posteriori-distribution, and indexes of nearest neighbors
 
 

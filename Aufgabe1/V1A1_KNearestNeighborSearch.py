@@ -12,9 +12,7 @@ def getKNearestNeighbors(x, X, k=1):  # realizes nearest neighbor search of x in
     """
 
     return np.argsort([np.sum(np.power((x - X[i]), 2)) for i in range(len(X))])
-    # k hat O(n) Einfluss auf Laufzeit
-    # len(x) hat O(n) Einfluss
-    # len(X) hat O()
+
 
 # ***** MAIN PROGRAM ********
 

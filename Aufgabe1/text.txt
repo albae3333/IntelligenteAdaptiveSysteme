@@ -1,0 +1,18 @@
+V1A1
+c) 	sortierren ist n * log(n)
+	N := len(X) X = Datenmatrix -> Anzahl Datenvektoren
+	D := len(x) x = Datenvektor -> Anzahl Vektorelemente
+	k = Anzahl nearest neighbour
+
+V1A2
+a) Klassen:
+	- Classifier, abstrakte Klasse, die das Grundgerüst und die zu implementierenden Funktionen angibt und eine eigene Funktion crossvalidate(self,S,X,T) implementiert
+	- KNNClassifier, konkrete Klasse, die von Classifier erbt und alle Funktionen implementiert und zusätzlich eine eigene Funktion getKNearestNeighbors(self, x, k, X) implementiert
+	- FastKNNClassifier, konkrete Klasse, die von KNNClassifier erbt und die fit(self,X,T) und getKNearestNeighbors(self, x, k=None) überschreibt. Diese müssen noch vervollständigt werden
+   Methoden:
+	- __init__(self,C) -> Kontrsuktor der Klasse, wobei C die Anzahl der zu unterscheidenden Klassen angibt
+	- fit(self,X,T) -> Funktion stellt sicher, dass die Datenmatrix ein zweidimensionales Array ist und der Datenvektor ein eindimensionales Array ist. Die Anzahl der Klassen wird in C gespeichert, allerdings nur wenn die Klassen durchgänig mit ganzen Integerzahlen durchnummeriert wurden
+	- predict(self, x) -> muss von abgeleitenten Klassen implementiert werden. Soll die Wahrscheinlichkeiten, dass der neue Datenvektor x zu einer der Klassen aus T gehört ausgeben
+	- crossvalidate(self,S,X,T) -> Teilt die Datenmenge in S Teile und trainiert das Model mit S-1 Teilen der Datenmenge, der S-Teil wird nach dem Trainieren zum Validieren benutzt. Am Ende wird die Wahrscheinlichkeit der Fehlklassifikation ausgegeben und eine Matrix in der angegeben ist mit welcher Wahrscheinlichkeit ein Objekt der Klasse j als ein Objekt der Klasse i klassifiziert wird.
+b) Die Klasse "lernt" nicht wirklich. Es wäre ein bereits trainiertes Netz, dass einfach nur in seiner Matrix nachschaut welcher bisherige Datenvektor am nächsten des neuen Datenvektor ist.
+c) Man sollte für 2 Klassen immer ein ungerades k angeben, damit ausgeschlossen wird, dass gleiche viele neighbour aus den Klassen zurückgeliefert wird (z.B. 1 Neighbour aus Klasse 0 und 1 Neighbour aus Klasse 1).
