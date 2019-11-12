@@ -2,6 +2,8 @@
 # Python Module for Classification Algorithms
 # Programmgeruest zu Versuch 1, Aufgabe 2
 import numpy as np
+import statistics
+import math
 import scipy.spatial
 from random import randint
 
@@ -180,7 +182,14 @@ class FastKNNClassifier(KNNClassifier):
         """
         KNNClassifier.fit(self,X,T)                # call to parent class method (just store X and T)
         self.kdtree = None                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
-        
+        arrays_of_dimension = np.transpose(X)      # works for getting the items of one dimension into one list
+        for i in range(arrays_of_dimension.shape[0]):   # find median for each dimension
+            median_of_dimension = math.ceil(statistics.median(arrays_of_dimension[i]))      # round up on median at even number of items
+            print(median_of_dimension)
+        # problem already selected vector are in there
+        # wrong approach, have to get median then slice the list till median and median till end and continue with them
+        # sort first dimension -> makes slicing easy
+
     def getKNearestNeighbors(self, x, k=None):  # realizes fast K-nearest-neighbor-search of x in data set X
         """
         fast computation of the k nearest neighbors for a query vector x given a data matrix X by using the KD-tree
@@ -214,12 +223,25 @@ if __name__ == '__main__':
     knnc.fit(X,T)                  # train with given data
 
     # (iii) Classify test vector x
-    k=3
+    k=1
     c,pc,idx_knn=knnc.predict(x,k)
     print("\nClassification with the naive KNN-classifier:")
     print("Test vector is most likely from class ",c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
     print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
 
+    k=2
+    c,pc,idx_knn=knnc.predict(x,k)
+    print("\nClassification with the naive KNN-classifier:")
+    print("Test vector is most likely from class ",c)
+    print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
+    print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
+
+    k=3
+    c,pc,idx_knn=knnc.predict(x,k)
+    print("\nClassification with the naive KNN-classifier:")
+    print("Test vector is most likely from class ",c)
+    print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
+    print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
     # (iv) Repeat steps (ii) and (iii) for the FastKNNClassifier (based on KD-Trees)
     # INSERT YOUR CODE
