@@ -186,6 +186,7 @@ class FastKNNClassifier(KNNClassifier):
         for i in range(arrays_of_dimension.shape[0]):   # find median for each dimension
             median_of_dimension = math.ceil(statistics.median(arrays_of_dimension[i]))      # round up on median at even number of items
             print(median_of_dimension)
+
         # problem already selected vector are in there
         # wrong approach, have to get median then slice the list till median and median till end and continue with them
         # sort first dimension -> makes slicing easy
@@ -200,7 +201,8 @@ class FastKNNClassifier(KNNClassifier):
         if(k==None): k=self.k                      # do a K-NN search...
         idxNN = k*[0]                              # REPLACE DUMMY CODE BY YOUR OWN CODE! Compute nearest neighbors using the KD-Tree
         return idxNN                               # return indexes of k nearest neighbors
-
+        # Eukildische distanz von neuen Knoten und root berechnen, dann schauen ob er in jeweiliger Dimension größer kleiner ist
+        # und entsprechend den nächsten oder übernächsten Knoten auswählen
 
 
 # *******************************************************
