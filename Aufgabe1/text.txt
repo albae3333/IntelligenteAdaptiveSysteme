@@ -39,7 +39,8 @@ b)	S = gibt an in wie viele Teile der Datensatz unterteilt werden soll
 c)	- Um alle Klassen, die wir in V1A2_Classifier definiert und implementiert haben in unserem neuen Skript verwenden zu können
 	- N1 und N2 sind die Datenvektoren mit denen gearbeitet wird. N1 ist von Klasse 0 und N2 von Klasse 1. N gibt die Anzahl der Spalten der Datenmatrix an, also wie viele Datenvektoren in der Matrix sind. D gibt die Dimensionalität der Datenvektoren an, bzw. wie viele Zeilen die Datenmatrix X hat.
 	- die Datenvektoren sind Gaußverteilt; Mittelwert = Expectation mu1 und mu2; Matritzen aus Code
-	- 
+	- pE_naive ist die Wahrscheinlichkeit einer Fehl-Klassifikation, pCE_naive ist die Matrix, die die Wahrscheinlichkeit eine Obejkt der Klasse a einer Klasse zuzuordnen, t_naive ist die geschätzte Dauer zum Lernen des gesamten Datensatzes
+
 	
 
 	

@@ -182,6 +182,7 @@ class FastKNNClassifier(KNNClassifier):
         """
         KNNClassifier.fit(self,X,T)                # call to parent class method (just store X and T)
         self.kdtree = None                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
+
         arrays_of_dimension = np.transpose(X)      # works for getting the items of one dimension into one list
         for i in range(arrays_of_dimension.shape[0]):   # find median for each dimension
             median_of_dimension = math.ceil(statistics.median(arrays_of_dimension[i]))      # round up on median at even number of items

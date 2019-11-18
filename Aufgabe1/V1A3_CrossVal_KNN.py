@@ -44,7 +44,14 @@ for x_test in X_test:             # Test some additional data vectors x_test fro
 
 # (ii.b) test of KD-tree KNN classifier
 print("\nFast KNN Classifier based on KD-Trees:","\n---------------------------------------")
-t_kdtree,pE_kdtree,pCE_kdtree=-1,-1,-1      # REPLACE BY YOUR OWN CODE
+fknnc = FastKNNClassifier(knnc)
+t1 = clock()
+pE_kdtree,pCE_kdtree=fknnc.crossvalidation(S,X,T)      # REPLACE BY YOUR OWN CODE
+t2 = clock()
+t_kdtree = t2-t1
+
+print("S=", S, " fold Cross-Validation of kdTree ", k, "-NN-Classifier requires ", t_kdtree, " seconds. Confusion error probability matrix is \n", pCE_kdtree)
+print("Probability of a classification error is pE = ", pE_kdtree)
 
 # (iii) plot data
 f=plt.figure()
