@@ -46,7 +46,7 @@ for x_test in X_test:             # Test some additional data vectors x_test fro
 print("\nFast KNN Classifier based on KD-Trees:","\n---------------------------------------")
 fknnc = FastKNNClassifier(knnc)
 t1 = clock()
-pE_kdtree,pCE_kdtree=fknnc.crossvalidation(S,X,T)      # REPLACE BY YOUR OWN CODE
+pE_kdtree,pCE_kdtree=fknnc.crossvalidate(S,X,T)      # REPLACE BY YOUR OWN CODE
 t2 = clock()
 t_kdtree = t2-t1
 
