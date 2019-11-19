@@ -22,11 +22,11 @@ for i in range(len(N_list)):
     N=N_list[i]
     print("\nrunning KNN cross validation for K=",K,"S=",S,"N=",N)
 
-    # (ii.a) generate synthetic data 
-    N1,N2=N//2,N//2                   # N1 and N2 data vectors for the two classes  
+    # (ii.a) generate synthetic data
+    N1,N2=N//2,N//2                   # N1 and N2 data vectors for the two classes
     X1 = np.random.multivariate_normal(mu1,cov1,(N1))    # Gaussian data vectors for class 1
     X2 = np.random.multivariate_normal(mu2,cov2,(N2))    # Gaussian data vectors for class 2
-    T1,T2 = N1*[0],N2*[1]             # corresponding class labels 
+    T1,T2 = N1*[0],N2*[1]             # corresponding class labels
     X = np.concatenate((X1,X2))       # entire data set
     T = np.concatenate((T1,T2))       # entire label set
 
@@ -57,7 +57,7 @@ print("\nResults for N=",N_list,"\ntime_comp_naive=",time_comp_naive,"\ntime_com
 # (iv) plot results
 f=plt.figure()
 a = f.add_subplot(111)
-a.plot(N_list,time_comp_naive,'bo-',N_list,time_comp_kdtree,'gd-')       # plot computing times 
+a.plot(N_list,time_comp_naive,'bo-',N_list,time_comp_kdtree,'gd-')       # plot computing times
 a.set_xlabel('number of data vectors N');
 a.set_ylabel('computing time [sec]');
 a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K='+str(K));

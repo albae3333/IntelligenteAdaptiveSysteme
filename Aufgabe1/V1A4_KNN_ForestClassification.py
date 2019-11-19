@@ -5,10 +5,10 @@ from time import clock
 from random import randint
 from V1A2_Classifier import *
 
-# (I) Load data 
-forestdata  = pd.read_csv('../DATA/ForestTypes/ForestTypesData.csv'); # load data as pandas data frame 
-classlabels = ['s','h','d','o'];                                      # possible class labels (C=4) 
-classidx    = {classlabels[i]:i for i in range(len(classlabels))}     # dict for mapping classlabel to index 
+# (I) Load data
+forestdata  = pd.read_csv('../DATA/ForestTypes/ForestTypesData.csv'); # load data as pandas data frame
+classlabels = ['s','h','d','o'];                                      # possible class labels (C=4)
+classidx    = {classlabels[i]:i for i in range(len(classlabels))}     # dict for mapping classlabel to index
 C           = len(classlabels)        # number of classes (Note: K is now the number of nearest-neighbors!!!!!!)
 T_txt = forestdata.values[:,0]        # array of class labels of data vectors (class label is first data attribute)
 X = forestdata.values[:,1:]           # array of feature vectors (features are remaining attributes)
@@ -28,7 +28,7 @@ for i in range(len(S_list)):
     for j in range(len(K_list)):
         K=K_list[j]
         t1=clock()                   # start time
-        knnc = 0                              # REPLACE! create appropriate KNN classifier (with kd-trees) 
+        knnc = 0                              # REPLACE! create appropriate KNN classifier (with kd-trees)
         pE,pCE = 0,0                          # REPLACE! Do S-fold cross validation and get error probabilities / confusion matrix
         t2=clock()                            # end time
         time_comp=t2-t1                       # computing time in seconds
