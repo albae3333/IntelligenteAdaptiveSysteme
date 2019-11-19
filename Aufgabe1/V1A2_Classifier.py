@@ -2,14 +2,15 @@
 # Python Module for Classification Algorithms
 # Programmgeruest zu Versuch 1, Aufgabe 2
 import numpy as np
-import statistics
-import math
-import scipy.spatial
 from random import randint
+from scipy import spatial
 
 # ----------------------------------------------------------------------------------------- 
 # Base class for classifiers
-# ----------------------------------------------------------------------------------------- 
+# -----------------------------------------------------------------------------------------
+
+
+
 class Classifier:
     """
     Abstract base class for a classifier.
@@ -181,16 +182,9 @@ class FastKNNClassifier(KNNClassifier):
         :returns: - 
         """
         KNNClassifier.fit(self,X,T)                # call to parent class method (just store X and T)
-        self.kdtree = None                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
+        self.kdtree = spatial.KDTree(X)                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
 
-        arrays_of_dimension = np.transpose(X)      # works for getting the items of one dimension into one list
-        for i in range(arrays_of_dimension.shape[0]):   # find median for each dimension
-            median_of_dimension = math.ceil(statistics.median(arrays_of_dimension[i]))      # round up on median at even number of items
-            print(median_of_dimension)
 
-        # problem already selected vector are in there
-        # wrong approach, have to get median then slice the list till median and median till end and continue with them
-        # sort first dimension -> makes slicing easy
 
     def getKNearestNeighbors(self, x, k=None):  # realizes fast K-nearest-neighbor-search of x in data set X
         """
@@ -200,11 +194,8 @@ class FastKNNClassifier(KNNClassifier):
         :return idxNN: return list of k line indexes referring to the k nearest neighbors of x in X
         """
         if(k==None): k=self.k                      # do a K-NN search...
-        idxNN = k*[0]                              # REPLACE DUMMY CODE BY YOUR OWN CODE! Compute nearest neighbors using the KD-Tree
-        return idxNN                               # return indexes of k nearest neighbors
-        # Eukildische distanz von neuen Knoten und root berechnen, dann schauen ob er in jeweiliger Dimension größer kleiner ist
-        # und entsprechend den nächsten oder übernächsten Knoten auswählen
-
+        Null, index = self.kdtree.query(x, k)
+        return index
 
 # *******************************************************
 # __main___
@@ -226,6 +217,7 @@ if __name__ == '__main__':
     knnc.fit(X,T)                  # train with given data
 
     # (iii) Classify test vector x
+    '''
     k=1
     c,pc,idx_knn=knnc.predict(x,k)
     print("\nClassification with the naive KNN-classifier:")
@@ -246,5 +238,15 @@ if __name__ == '__main__':
     print("Test vector is most likely from class ",c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
     print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
+    '''
     # (iv) Repeat steps (ii) and (iii) for the FastKNNClassifier (based on KD-Trees)
-    # INSERT YOUR CODE
+
+    fknnc = FastKNNClassifier(knnc)
+    fknnc.fit(X,T)
+
+    k = 3
+    c, pc, idx_knn = fknnc.predict(x, k)
+    print("\nClassification with the fast KNN-classifier:")
+    print("Test vector is most likely from class ", c)
+    print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
+    print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
