@@ -16,7 +16,7 @@ def getKNearestNeighbors(x, X, k=1):  # realizes nearest neighbor search of x in
 
 # ***** MAIN PROGRAM ********
 
-# (i) Generate dummy data 
+# (i) Generate dummy data
 X = np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]])  # data matrix X: list of data vectors (=database) of dimension D=3
 x = np.array([1.5, 3.6, 5.7])  # a test data vector
 print("Data matrix X=\n", X)
