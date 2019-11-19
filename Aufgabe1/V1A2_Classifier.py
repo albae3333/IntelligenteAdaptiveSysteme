@@ -4,26 +4,15 @@
 # Programmgeruest zu Versuch 1, Aufgabe 2
 
 import numpy as np
-<<<<<<< HEAD
 from random import randint
 from scipy import spatial
-=======
 import statistics
 import math
-from scipy import spatial
-import random
-
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
 
 # -----------------------------------------------------------------------------------------
 # Base class for classifiers
 # -----------------------------------------------------------------------------------------
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
 class Classifier:
     """
     Abstract base class for a classifier.
@@ -198,11 +187,9 @@ class FastKNNClassifier(KNNClassifier):
         :param T: Vector of class labels, must have same length as X, each label should be integer in 0,1,...,C-1
         :returns: -
         """
-<<<<<<< HEAD
         KNNClassifier.fit(self,X,T)                # call to parent class method (just store X and T)
         self.kdtree = spatial.KDTree(X)                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
 
-=======
         KNNClassifier.fit(self, X, T)  # call to parent class method (just store X and T)
         self.kdtree = spatial.KDTree(X)  # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
 
@@ -212,10 +199,8 @@ class FastKNNClassifier(KNNClassifier):
             median_of_dimension = math.ceil(
                 statistics.median(arrays_of_dimension[i]))  # round up on median at even number of items
             print(median_of_dimension)
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
 
-
-    # noinspection PyMethodOverriding
+            # noinspection PyMethodOverriding
 
 
     def getKNearestNeighbors(self, x, k=None):  # realizes fast K-nearest-neighbor-search of x in data set X
@@ -225,22 +210,12 @@ class FastKNNClassifier(KNNClassifier):
         :param k: number of nearest-neighbors to be returned
         :return idxNN: return list of k line indexes referring to the k nearest neighbors of x in X
         """
-<<<<<<< HEAD
         if(k==None): k=self.k                      # do a K-NN search...
         Null, index = self.kdtree.query(x, k)
-        return index
-=======
-        if (k == None):
-            k = self.k  # do a K-NN search...
-
-        NULL, idxNN = spatial.KDTree(X).query(x, k)  # REPLACE DUMMY CODE BY YOUR OWN CODE! Compute nearest neighbors using the KD-Tree
-
-        return idxNN    # return indexes of k nearest neighbors Eukildische distanz von neuen Knoten und root berechnen, dann schauen ob er in jeweiliger Dimension größer kleiner ist
+        return index    # return indexes of k nearest neighbors Eukildische distanz von neuen Knoten und root berechnen, dann schauen ob er in jeweiliger Dimension größer kleiner ist
         # und entsprechend den nächsten oder übernächsten Knoten auswählen
 
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
-
-# *******************************************************
+        # *******************************************************
 # __main___
 # Module test
 # *******************************************************
@@ -261,14 +236,14 @@ if __name__ == '__main__':
     knnc.fit(X, T)  # train with given data
 
     # (iii) Classify test vector x
-<<<<<<< HEAD
+
     '''
     k=1
     c,pc,idx_knn=knnc.predict(x,k)
-=======
+
     k = 1
     c, pc, idx_knn = knnc.predict(x, k)
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
+
     print("\nClassification with the naive KNN-classifier:")
     print("Test vector is most likely from class ", c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
@@ -284,16 +259,16 @@ if __name__ == '__main__':
     k = 3
     c, pc, idx_knn = knnc.predict(x, k)
     print("\nClassification with the naive KNN-classifier:")
-<<<<<<< HEAD
+
     print("Test vector is most likely from class ",c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
     print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
     '''
-=======
+
     print("Test vector is most likely from class ", c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
     print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
+
     # (iv) Repeat steps (ii) and (iii) for the FastKNNClassifier (based on KD-Trees)
 
     fknnc = FastKNNClassifier(knnc)
