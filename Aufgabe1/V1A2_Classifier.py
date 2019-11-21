@@ -262,4 +262,15 @@ if __name__ == '__main__':
     print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
     print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
     # (iv) Repeat steps (ii) and (iii) for the FastKNNClassifier (based on KD-Trees)
-    # INSERT YOUR CODE
+
+
+
+    fknnc = FastKNNClassifier(knnc)
+    fknnc.fit(X, T)
+
+    k = 3
+    c, pc, idx_knn = fknnc.predict(x, k)
+    print("\nClassification with the fast KNN-classifier:")
+    print("Test vector is most likely from class ", c)
+    print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
+    print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
