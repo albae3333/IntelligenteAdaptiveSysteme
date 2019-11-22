@@ -32,16 +32,14 @@ knnc = KNNClassifier(C,k)
 knnc.fit(X,T)
 fknnc = FastKNNClassifier(knnc)
 fknnc.fit(X,T)
+print("Test vectors from X_test")
 for i in X_test:
     print(i)
     prediction_knnc = knnc.predict(i,k)[0]
     print("Knnc prediction:" + str(prediction_knnc))
-    print(i)
     prediction_fknnc = fknnc.predict(i,k)[0]
     print("Fknnc prediction:" + str(prediction_fknnc))
 
-
-'''
 # (ii.a) test of naive KNN classifier
 print("\nNaive KNN Classifier:","\n------------------------")
 knnc = KNNClassifier(C,k)         # create classifier object of class KNNClassifier
@@ -77,4 +75,3 @@ a.set_ylabel('feature x2');
 a.set_title('Naive: '+str(t_naive)+'sec/ KD-Tree: '+str(t_kdtree)+'sec; Classification Error='+str(pE_naive)+'/'+str(pE_kdtree));
 
 plt.show()
-'''

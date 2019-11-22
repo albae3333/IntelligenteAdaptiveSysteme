@@ -1,10 +1,7 @@
-.gitignore
-<<<<<<< HEAD
 Vorlesung/
 venv/
 .idea/
-=======
+Aufgabe1/__pycache__/
 Aufgabe1/.idea/
 Aufgabe1/venv/
 Aufgabe1/Dateien/
->>>>>>> 4c7ff775ae793d51ce9ea32d7eab077a0d506823
