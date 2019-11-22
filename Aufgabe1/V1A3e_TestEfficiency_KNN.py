@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from time import clock
 from V1A2_Classifier import *
+import time
 
 # (i) define parameters K,S,N and 2-dimensional Gaussian
 C=2;
 K=5;
 S=1;
-N_list=[10, 20];                      # REPLACE! Insert list of data set size N as desired
+N_list=[10, 20, 50, 100, 200,500,1000,2000,5000,10000];
 mu1, mu2 = [1,1], [3,1]               # expectations for the two classes
 cov1 = [[1,0.5],\
         [0.5,1]]                      # covariance matrix for class 1
@@ -32,9 +33,9 @@ for i in range(len(N_list)):
 
     # (ii.b) do cross validation for this data set using naive KNN
     knnc = KNNClassifier(C,K)         # create classifier object of class KNNClassifier
-    t1=clock()                        # start time
+    t1=time.perf_counter()                        # start time
     pE,pCE = knnc.crossvalidate(S,X,T)# do S-fold cross validation for data X,T
-    t2=clock()                        # end time
+    t2=time.perf_counter()                        # end time
     time_comp_naive[i]=t2-t1          # computing time in seconds
     print("\nS=",S," fold cross validation using the naive KNNClassifier yields the following results:")
     print("Classification error probability = ", pE)
@@ -44,7 +45,12 @@ for i in range(len(N_list)):
 
     # (ii.c) do cross validation for this data set using KNN with KD trees
     # INSERT CODE AS IN (ii.b) for KNN with kd trees!!!
-    time_comp_kdtree[i]=-1           # REPLACE DUMMY CODE with true computing time
+    fknnc = FastKNNClassifier(knnc)  # create an FastKNNClassifier object
+    t1 = time.perf_counter()  # start time logging
+    pE_kdtree, pCE_kdtree = fknnc.crossvalidate(S, X, T)  # "train" the model with crossvalidation
+    t2 = time.perf_counter()  # end time logging
+    time_comp_kdtree[i] = t2 - t1  # calc how long crossvalidation took
+
     print("\nS=",S," fold cross validation using the KD-Tree-KNNClassifier yields the following results:")
     print("Classification error probability = ", pE)
     print("Accuracy = ", 1.0-pE)
