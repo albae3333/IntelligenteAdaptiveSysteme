@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # Programmgeruest zu Versuch 1, Aufgabe 3
 import numpy as np
-import scipy.spatial
+form scipy import spatial
 from random import randint
 import matplotlib
 import matplotlib.pyplot as plt
 from time import clock
+import time
 from V1A2_Classifier import *
 
 # (i) create some synthetic data (2-dimensional Gaussian)
@@ -31,7 +32,7 @@ X_test = np.array([[2,1],[5,1],[-1,1]])   # Some additional data vectors to be t
 # (ii.a) test of naive KNN classifier
 print("\nNaive KNN Classifier:","\n------------------------")
 knnc = KNNClassifier(C,k)         # create classifier object of class KNNClassifier
-t1=clock()                        # start time
+t1=time.perf_counter_ns()         # start time
 pE_naive,pCE_naive = knnc.crossvalidate(S,X,T) # do S-fold cross validation for data X,T
 t2=clock()                        # end time
 t_naive=t2-t1                     # wall time required by the naive KNN algorithmus (in seconds)
@@ -45,9 +46,9 @@ for x_test in X_test:             # Test some additional data vectors x_test fro
 # (ii.b) test of KD-tree KNN classifier
 print("\nFast KNN Classifier based on KD-Trees:","\n---------------------------------------")
 fknnc = FastKNNClassifier(knnc)
-t1 = clock()
+t1 = time.perf_counter()
 pE_kdtree,pCE_kdtree=fknnc.crossvalidate(S,X,T)      # REPLACE BY YOUR OWN CODE
-t2 = clock()
+t2 = time.perf_counter()
 t_kdtree = t2-t1
 
 print("S=", S, " fold Cross-Validation of kdTree ", k, "-NN-Classifier requires ", t_kdtree, " seconds. Confusion error probability matrix is \n", pCE_kdtree)
@@ -58,8 +59,8 @@ f=plt.figure()
 a = f.add_subplot(111)
 a.plot(X1.T[0],X1.T[1],'rx')               # plot data vectors of class 1
 a.plot(X2.T[0],X2.T[1],'g+')               # plot data vectors of class 2
-a.set_xlabel('feature x1');
-a.set_ylabel('feature x2');
+a.set_xlabel('feature x1')
+a.set_ylabel('feature x2')
 a.set_title('Naive: '+str(t_naive)+'sec/ KD-Tree: '+str(t_kdtree)+'sec; Classification Error='+str(pE_naive)+'/'+str(pE_kdtree));
 
 plt.show()

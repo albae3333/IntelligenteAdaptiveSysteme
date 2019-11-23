@@ -152,15 +152,22 @@ class KNNClassifier(Classifier):
         :returns pClassPosteriori: A-Posteriori probabilities, pClassPosteriori[i] is probability that x belongs to class i
         :returns idxKNN: indexes of the k nearest neighbors (ordered w.r.t. ascending distance)
         """
-        if k == None: k = self.k  # use default parameter k?
-        idxKNN = self.getKNearestNeighbors(x, k)  # get indexes of k nearest neighbors of x
-        pClassPosteriori = np.zeros(self.C)  # initialise pClassPosteriori with zeros
-        for i in idxKNN:  # go through every entry in idxKNN
-            pClassPosteriori[self.T[i]] = pClassPosteriori[self.T[i]] + 1  # count how often the class is in idxKNN
-        prediction = np.argsort(pClassPosteriori)[
-            -1]  # the most propable class is the one with the most nearest neighbour
-        pClassPosteriori = pClassPosteriori / k  # divide through k
-        return prediction, pClassPosteriori, idxKNN  # return predicted class, a-posteriori-distribution, and indexes of nearest neighbors
+        if (k == None):
+            k = self.k                                                      # use default parameter k?
+
+        idxKNN = self.getKNearestNeighbors(x, k)                            # get indexes of k nearest neighbors of x
+        pClassPosteriori = np.zeros(self.C)                                 # initialise pClassPosteriori with zeros
+
+        for i in idxKNN:                                                    # go through every entry in idxKNN
+            pClassPosteriori[self.T[i]] = pClassPosteriori[self.T[i]] + 1   # count how often the class is in idxKNN
+
+        prediction = np.argsort(pClassPosteriori)[-1]                       # the most propable class is the one with the most nearest neighbour
+
+
+
+
+        pClassPosteriori = pClassPosteriori / k                             # divide through k
+        return prediction, pClassPosteriori, idxKNN              # return predicted class, a-posteriori-distribution, and indexes of nearest neighbors
 
 
 # -----------------------------------------------------------------------------------------

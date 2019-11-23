@@ -4,18 +4,19 @@ import matplotlib.pyplot as plt
 from time import clock
 from V1A2_Classifier import *
 
+
 # (i) define parameters K,S,N and 2-dimensional Gaussian
-C=2;
-K=5;
-S=1;
-N_list=[10, 20];                      # REPLACE! Insert list of data set size N as desired
+C=2
+K=5
+S=1
+N_list=[10, 20]                       # REPLACE! Insert list of data set size N as desired
 mu1, mu2 = [1,1], [3,1]               # expectations for the two classes
 cov1 = [[1,0.5],\
         [0.5,1]]                      # covariance matrix for class 1
 cov2 = [[1,0.5],\
         [0.5,1]]                      # covariance matrix for class 2
-time_comp_naive  = np.zeros(len(N_list));    # allocate memory for time measurements for naive KNN
-time_comp_kdtree = np.zeros(len(N_list));    # allocate memory for time measurements for KNN with KD tree
+time_comp_naive  = np.zeros(len(N_list))    # allocate memory for time measurements for naive KNN
+time_comp_kdtree = np.zeros(len(N_list))    # allocate memory for time measurements for KNN with KD tree
 
 # (ii) Make (wall-)time measurements for cross validations of data sets of various sizes N
 for i in range(len(N_list)):
@@ -58,9 +59,9 @@ print("\nResults for N=",N_list,"\ntime_comp_naive=",time_comp_naive,"\ntime_com
 f=plt.figure()
 a = f.add_subplot(111)
 a.plot(N_list,time_comp_naive,'bo-',N_list,time_comp_kdtree,'gd-')       # plot computing times
-a.set_xlabel('number of data vectors N');
-a.set_ylabel('computing time [sec]');
-a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K='+str(K));
+a.set_xlabel('number of data vectors N')
+a.set_ylabel('computing time [sec]')
+a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K='+str(K))
 a.grid()
 
 plt.show()
