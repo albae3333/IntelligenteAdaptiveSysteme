@@ -133,13 +133,7 @@ class KNNClassifier(Classifier):
         if (k == None): k = self.k  # per default use stored k
         if (X == None): X = self.X  # per default use stored X
 
-        sorted_list = np.argsort([np.sum(np.power((x - X[i]), 2)) for i in range(len(X))])
-        return_list = []
-        while k != 0:
-            return_list.reverse()
-            return_list.append(sorted_list[k - 1])
-            return_list.reverse()
-            k = k - 1
+        return_list = np.argsort([np.sum(np.power((x - X[i]), 2)) for i in range(len(X))])[:k]
         return return_list  # REPLACE: Insert/adapt your code from V1A1_KNearestNeighborSearch.py
 
     def predict(self, x, k=None):
@@ -152,22 +146,14 @@ class KNNClassifier(Classifier):
         :returns pClassPosteriori: A-Posteriori probabilities, pClassPosteriori[i] is probability that x belongs to class i
         :returns idxKNN: indexes of the k nearest neighbors (ordered w.r.t. ascending distance)
         """
-        if (k == None):
-            k = self.k                                                      # use default parameter k?
-
+        if k == None: k = self.k                                            # use default parameter k?
         idxKNN = self.getKNearestNeighbors(x, k)                            # get indexes of k nearest neighbors of x
         pClassPosteriori = np.zeros(self.C)                                 # initialise pClassPosteriori with zeros
-
         for i in idxKNN:                                                    # go through every entry in idxKNN
             pClassPosteriori[self.T[i]] = pClassPosteriori[self.T[i]] + 1   # count how often the class is in idxKNN
-
         prediction = np.argsort(pClassPosteriori)[-1]                       # the most propable class is the one with the most nearest neighbour
-
-
-
-
         pClassPosteriori = pClassPosteriori / k                             # divide through k
-        return prediction, pClassPosteriori, idxKNN              # return predicted class, a-posteriori-distribution, and indexes of nearest neighbors
+        return prediction, pClassPosteriori, idxKNN                         # return predicted class, a-posteriori-distribution, and indexes of nearest neighbors
 
 
 # -----------------------------------------------------------------------------------------
@@ -195,20 +181,7 @@ class FastKNNClassifier(KNNClassifier):
         :returns: -
         """
         KNNClassifier.fit(self,X,T)                # call to parent class method (just store X and T)
-        self.kdtree = spatial.KDTree(X)                         # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
-
-        KNNClassifier.fit(self, X, T)  # call to parent class method (just store X and T)
-        self.kdtree = spatial.KDTree(X)  # REPLACE DUMMY CODE BY YOUR OWN CODE! Do an indexing of the feature vectors by constructing a kd-tree
-
-
-        arrays_of_dimension = np.transpose(X)  # works for getting the items of one dimension into one list
-        for i in range(arrays_of_dimension.shape[0]):  # find median for each dimension
-            median_of_dimension = math.ceil(
-                statistics.median(arrays_of_dimension[i]))  # round up on median at even number of items
-            print(median_of_dimension)
-
-            # noinspection PyMethodOverriding
-
+        self.kdtree = spatial.KDTree(X)
 
     def getKNearestNeighbors(self, x, k=None):  # realizes fast K-nearest-neighbor-search of x in data set X
         """
@@ -217,10 +190,12 @@ class FastKNNClassifier(KNNClassifier):
         :param k: number of nearest-neighbors to be returned
         :return idxNN: return list of k line indexes referring to the k nearest neighbors of x in X
         """
-        if(k==None): k=self.k                      # do a K-NN search...
-        Null, index = self.kdtree.query(x, k)
-        return index    # return indexes of k nearest neighbors Eukildische distanz von neuen Knoten und root berechnen, dann schauen ob er in jeweiliger Dimension größer kleiner ist
-        # und entsprechend den nächsten oder übernächsten Knoten auswählen
+        if(k==None): k=self.k                       # do a K-NN search...
+        Null, index = self.kdtree.query(x, k)       # query returns the index and distance, we save the distance in an
+                                                    # unused variable because we dont need it
+        if(k == 1):                                 # check if k == 1 because then query returns only an int
+            return [index]                          # return list if k == 1 because we iterate over it to get pClassPosteriori
+        return index                                # if k =/= 1  query already returns an array
 
         # *******************************************************
 # __main___
@@ -244,32 +219,31 @@ if __name__ == '__main__':
 
     # (iii) Classify test vector x
 
-    '''
     k=1
     c,pc,idx_knn=knnc.predict(x,k)
+
     k = 1
-    c, pc, idx_knn = knnc.predict(x, k)
+    pc, c, idx_knn = knnc.predict(x, k)
+
     print("\nClassification with the naive KNN-classifier:")
     print("Test vector is most likely from class ", c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
     print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
+
     k = 2
     c, pc, idx_knn = knnc.predict(x, k)
     print("\nClassification with the naive KNN-classifier:")
     print("Test vector is most likely from class ", c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
     print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
+
     k = 3
     c, pc, idx_knn = knnc.predict(x, k)
     print("\nClassification with the naive KNN-classifier:")
+
     print("Test vector is most likely from class ",c)
     print("A-Posteriori Class Distribution: prob(x is from class i)=",pc)
     print("Indexes of the k=",k," nearest neighbors: idx_knn=",idx_knn)
-    '''
-
-    print("Test vector is most likely from class ", c)
-    print("A-Posteriori Class Distribution: prob(x is from class i)=", pc)
-    print("Indexes of the k=", k, " nearest neighbors: idx_knn=", idx_knn)
 
     # (iv) Repeat steps (ii) and (iii) for the FastKNNClassifier (based on KD-Trees)
 

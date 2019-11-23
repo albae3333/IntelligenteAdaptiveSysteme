@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # Programmgeruest zu Versuch 1, Aufgabe 3
 import numpy as np
-form scipy import spatial
+import scipy.spatial
 from random import randint
 import matplotlib
 import matplotlib.pyplot as plt
 from time import clock
-import time
 from V1A2_Classifier import *
+import time
 
 # (i) create some synthetic data (2-dimensional Gaussian)
 C=2                               # two classes
@@ -26,15 +26,26 @@ N,D = X.shape[0], X.shape[1]      # size of data set
 print("Data size: N=",N,", D=",D)
 
 # (ii) create and test classifiers
-k,S = 5,10                        # k=number of nearest neighbors; S=number of data subsets for cross validation
+k,S = 511,1                        # k=number of nearest neighbors; S=number of data subsets for cross validation
 X_test = np.array([[2,1],[5,1],[-1,1]])   # Some additional data vectors to be tested
+knnc = KNNClassifier(C,k)
+knnc.fit(X,T)
+fknnc = FastKNNClassifier(knnc)
+fknnc.fit(X,T)
+print("Test vectors from X_test")
+for i in X_test:
+    print(i)
+    prediction_knnc = knnc.predict(i,k)[0]
+    print("Knnc prediction:" + str(prediction_knnc))
+    prediction_fknnc = fknnc.predict(i,k)[0]
+    print("Fknnc prediction:" + str(prediction_fknnc))
 
 # (ii.a) test of naive KNN classifier
 print("\nNaive KNN Classifier:","\n------------------------")
 knnc = KNNClassifier(C,k)         # create classifier object of class KNNClassifier
-t1=time.perf_counter_ns()         # start time
+t1=time.perf_counter()                        # start time
 pE_naive,pCE_naive = knnc.crossvalidate(S,X,T) # do S-fold cross validation for data X,T
-t2=clock()                        # end time
+t2=time.perf_counter()                       # end time
 t_naive=t2-t1                     # wall time required by the naive KNN algorithmus (in seconds)
 print("S=", S, " fold Cross-Validation of naive ", k, "-NN-Classifier requires ", t_naive, " seconds. Confusion error probability matrix is \n", pCE_naive)
 print("Probability of a classification error is pE = ", pE_naive)
@@ -45,11 +56,11 @@ for x_test in X_test:             # Test some additional data vectors x_test fro
 
 # (ii.b) test of KD-tree KNN classifier
 print("\nFast KNN Classifier based on KD-Trees:","\n---------------------------------------")
-fknnc = FastKNNClassifier(knnc)
-t1 = time.perf_counter()
-pE_kdtree,pCE_kdtree=fknnc.crossvalidate(S,X,T)      # REPLACE BY YOUR OWN CODE
-t2 = time.perf_counter()
-t_kdtree = t2-t1
+fknnc = FastKNNClassifier(knnc)                 # create an FastKNNClassifier object
+t1 = time.perf_counter()                        # start time logging
+pE_kdtree,pCE_kdtree=fknnc.crossvalidate(S,X,T) # "train" the model with crossvalidation
+t2 = time.perf_counter()                        # end time logging
+t_kdtree = t2-t1                                # calc how long crossvalidation took
 
 print("S=", S, " fold Cross-Validation of kdTree ", k, "-NN-Classifier requires ", t_kdtree, " seconds. Confusion error probability matrix is \n", pCE_kdtree)
 print("Probability of a classification error is pE = ", pE_kdtree)

@@ -3,20 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from time import clock
 from V1A2_Classifier import *
-
+import time
 
 # (i) define parameters K,S,N and 2-dimensional Gaussian
-C=2
-K=5
-S=1
-N_list=[10, 20]                       # REPLACE! Insert list of data set size N as desired
+C=2;
+K=5;
+S=1;
+N_list=[10, 20, 50, 100, 200,500,1000,2000,5000,10000];
 mu1, mu2 = [1,1], [3,1]               # expectations for the two classes
 cov1 = [[1,0.5],\
         [0.5,1]]                      # covariance matrix for class 1
 cov2 = [[1,0.5],\
         [0.5,1]]                      # covariance matrix for class 2
-time_comp_naive  = np.zeros(len(N_list))    # allocate memory for time measurements for naive KNN
-time_comp_kdtree = np.zeros(len(N_list))    # allocate memory for time measurements for KNN with KD tree
+time_comp_naive  = np.zeros(len(N_list));    # allocate memory for time measurements for naive KNN
+time_comp_kdtree = np.zeros(len(N_list));    # allocate memory for time measurements for KNN with KD tree
 
 # (ii) Make (wall-)time measurements for cross validations of data sets of various sizes N
 for i in range(len(N_list)):
@@ -33,9 +33,9 @@ for i in range(len(N_list)):
 
     # (ii.b) do cross validation for this data set using naive KNN
     knnc = KNNClassifier(C,K)         # create classifier object of class KNNClassifier
-    t1=clock()                        # start time
+    t1=time.perf_counter()                        # start time
     pE,pCE = knnc.crossvalidate(S,X,T)# do S-fold cross validation for data X,T
-    t2=clock()                        # end time
+    t2=time.perf_counter()                        # end time
     time_comp_naive[i]=t2-t1          # computing time in seconds
     print("\nS=",S," fold cross validation using the naive KNNClassifier yields the following results:")
     print("Classification error probability = ", pE)
@@ -45,7 +45,12 @@ for i in range(len(N_list)):
 
     # (ii.c) do cross validation for this data set using KNN with KD trees
     # INSERT CODE AS IN (ii.b) for KNN with kd trees!!!
-    time_comp_kdtree[i]=-1           # REPLACE DUMMY CODE with true computing time
+    fknnc = FastKNNClassifier(knnc)  # create an FastKNNClassifier object
+    t1 = time.perf_counter()  # start time logging
+    pE_kdtree, pCE_kdtree = fknnc.crossvalidate(S, X, T)  # "train" the model with crossvalidation
+    t2 = time.perf_counter()  # end time logging
+    time_comp_kdtree[i] = t2 - t1  # calc how long crossvalidation took
+
     print("\nS=",S," fold cross validation using the KD-Tree-KNNClassifier yields the following results:")
     print("Classification error probability = ", pE)
     print("Accuracy = ", 1.0-pE)
@@ -59,11 +64,9 @@ print("\nResults for N=",N_list,"\ntime_comp_naive=",time_comp_naive,"\ntime_com
 f=plt.figure()
 a = f.add_subplot(111)
 a.plot(N_list,time_comp_naive,'bo-',N_list,time_comp_kdtree,'gd-')       # plot computing times
-a.set_xlabel('number of data vectors N')
-a.set_ylabel('computing time [sec]')
-a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K='+str(K))
+a.set_xlabel('number of data vectors N');
+a.set_ylabel('computing time [sec]');
+a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K='+str(K));
 a.grid()
 
 plt.show()
-
-
