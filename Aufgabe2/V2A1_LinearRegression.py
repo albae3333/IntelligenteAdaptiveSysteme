@@ -46,8 +46,8 @@ W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T)
 print("W_LSR=",W_LSR)
 
 # (III) make predictions for training and test data
-Y_train = [np.sum(np.dot(W_LSR.T, PHI[i])) for i in range(N)]   # 
-Y_test = [np.sum(np.dot(W_LSR.T, PHI_test[i])) for i in range(N)]
+Y_train = [np.sum(np.dot(W_LSR.T, PHI[i])) for i in range(N)]       # bestimmen welche Klasse es ist anhand der Werte
+Y_test = [np.sum(np.dot(W_LSR.T, PHI_test[i])) for i in range(N)]   # bestimmen welche Klasse es ist anhand der Werte
 print("Y_test=",Y_test)
 print("T_test=",T_test)
 print("training data error = ", getDataError(Y_train,T))
