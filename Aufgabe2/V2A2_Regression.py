@@ -26,7 +26,7 @@ class Regressifier:
 
     def predict(self,x):      # predict a target vector given the data vector x 
         """
-        Implementation of the regression algorithm; should be overwritten by any derived class 
+        Implementation of the regression algorithm  should be overwritten by any derived class 
         :param x: test data vector of size D
         :returns: predicted target vector
         """
@@ -37,7 +37,7 @@ class Regressifier:
         Do a S-fold cross validation
         :param S: Number of parts the data set is divided into
         :param X: Data matrix (one data vector per row)
-        :param T: Matrix of target vectors; T[n] is target vector of X[n]
+        :param T: Matrix of target vectors  T[n] is target vector of X[n]
         :param dist: a fuction dist(t) returning the length of vector t (default=Euklidean)
         :returns (E_dist,sd_dist,E_min,E_max) : mean, standard deviation, minimum, and maximum of absolute error 
         :returns (Erel_dist,sdrel_dist,Erel_min,Erel_max) : mean, standard deviation, minimum, and maximum of relative error 
@@ -136,9 +136,9 @@ class DataScaler:
 # ----------------------------------------------------------------------------------------- 
 # function to compute polynomial basis functions 
 # ----------------------------------------------------------------------------------------- 
-def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix; returns an 1xM matrix 
+def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix  returns an 1xM matrix 
     """
-    polynomial basis function vector; may be used to transform a data vector x into a feature vector phi(x) having polynomial basis function components
+    polynomial basis function vector  may be used to transform a data vector x into a feature vector phi(x) having polynomial basis function components
     :param x: data vector to be transformed into a feature vector
     :param deg: degree of polynomial
     :returns phi: feature vector 
@@ -185,8 +185,8 @@ class LSRRegressifier(Regressifier):
         """
         self.lmbda=lmbda       # set regression parameter (default 0)
         self.phi=phi           # set basis functions used for linear regression (default: degree 1 polynomials)
-        self.flagSTD=flagSTD;  # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
-        self.eps=eps;          # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
+        self.flagSTD=flagSTD   # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
+        self.eps=eps           # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
 
 
     def fit(self,X,T,lmbda=None,phi=None,flagSTD=None): # train/compute LS regression with data matrix X and target value matrix T
@@ -210,7 +210,7 @@ class LSRRegressifier(Regressifier):
             X=self.datascalerX.scale(X)        # scale all features (=columns) of data matrix X to mean=0 and s.d.=1
             T=self.datascalerT.scale(T)        # ditto for target matrix T
         # (iii) compute weight matrix and check numerical condition
-        flagOK,maxZ=1,0;                       # if <1 then matrix inversion is numerically infeasible
+        flagOK,maxZ=1,0                        # if <1 then matrix inversion is numerically infeasible
         try:
             self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
             self.M = self.phi(self.D*[0]).size # get number of basis functions  
@@ -224,7 +224,7 @@ class LSRRegressifier(Regressifier):
             maxZ = 0                           # REPLACE dummy code: Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
         except: 
-            flagOK=0;
+            flagOK=0 
             print("EXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, " maxZ=", maxZ)
             raise
         return flagOK 
@@ -323,8 +323,8 @@ if __name__ == '__main__':
     print("X=",X)
     print("T=",T)
 
-    # (ii) define basis functions (phi should return list of basis functions; x should be a list)
-    deg=2;                               # degree of polynomial
+    # (ii) define basis functions (phi should return list of basis functions  x should be a list)
+    deg=2                                # degree of polynomial
     phi=lambda x: phi_polynomial(x,2)    # define phi by polynomial basis-functions up to degree deg 
     print("phi(4)=", phi([4]))           # print basis function vector [1, x, x*x ...] for x=4
     print("phi([1,2])=", phi([1,2]))     # print basis function vector for two-dim. inputs (yields many output components) 
@@ -333,7 +333,7 @@ if __name__ == '__main__':
     print("\n-----------------------------------------")
     print("Do a Least-Squares-Regression")
     print("-----------------------------------------")
-    lmbda=0;
+    lmbda=0 
     lsr = LSRRegressifier(lmbda,phi)
     lsr.fit(X,T)
     print("lsr.W_LSR=",lsr.W_LSR)        # weight vector (should be approximately [w0,w1]=[4,2])
@@ -349,7 +349,7 @@ if __name__ == '__main__':
     print("\n-----------------------------------------")
     print("Do a KNN-Regression")
     print("-----------------------------------------")
-    K=5;
+    K=5 
     knnr = KNNRegressifier(K)
     knnr.fit(X,T)
     print("prediction of x=",x,"is y=",knnr.predict(x))

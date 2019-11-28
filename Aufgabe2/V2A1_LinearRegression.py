@@ -3,24 +3,25 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-def fun_true(X):                              # compute 1-dim. parable function; X must be Nx1 data matrix
+def fun_true(X):                              # compute 1-dim. parable function  X must be Nx1 data matrix
     w2,w1,w0 = 3.0,-1.0,2.0                   # true parameters of parable y(x)=w0+w1*x+w2*x*x
     return w0+w1*X+w2*np.multiply(X,X)        # return function values (same size as X)
 
 def generateDataSet(N,xmin,xmax,sd_noise):    # generate data matrix X and target values T
-    X=xmin+np.random.rand(N,1)*(xmax-xmin)    # get random x values uniformly in [xmin;xmax)
-    T=fun_true(X);                            # target values without noise
+                                              # N = number of values  
+    X=xmin+np.random.rand(N,1)*(xmax-xmin)    # get random x values uniformly in [xmin xmax)
+    T=fun_true(X)                             # target values without noise
     if(sd_noise>0):
         T=T+np.random.normal(0,sd_noise,X.shape) # add noise 
     return X,T
 
 def getDataError(Y,T):                        # compute data error (least squares) between prediction Y and true target values T
-    D=np.multiply(Y-T,Y-T);                   # squared differences between Y and T
-    return 0.5*sum(sum(D));                   # return least-squares data error function E_D
+    D=np.multiply(Y-T,Y-T)                    # squared differences between Y and T
+    return 0.5*sum(sum(D))                    # return least-squares data error function E_D
 
 def phi_polynomial(x,deg=1):                            # compute polynomial basis function vector phi(x) for data x 
     assert(np.shape(x)==(1,)), "currently only 1dim data supported"
-    return np.array([x[0]**i for i in range(deg+1)]).T; # returns feature vector phi(x)=[1 x x**2 x**3 ... x**deg]
+    return np.array([x[0]**i for i in range(deg+1)]).T  # returns feature vector phi(x)=[1 x x**2 x**3 ... x**deg]
 
 # (I) generate data 
 np.random.seed(10)                            # set seed of random generator (to be able to regenerate data)
@@ -37,14 +38,16 @@ deg=5                                                             # degree of po
 N,D = np.shape(X)                                                 # shape of data matrix X
 N,K = np.shape(T)                                                 # shape of target value matrix T
 PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate design matrix
+PHI_test = np.array([phi_polynomial(X_test[i],deg).T for i in range(N)])    # generate design matrix for X_test
 N,M = np.shape(PHI)                                               # shape of design matrix
 print("PHI=", PHI)
-W_LSR = np.zeros((M,1))                                           # REPLACE THIS BY REGULARIZED LEAST SQUARES WEIGHTS!  
+print("PHI_test=", PHI_test)
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T)                                           
 print("W_LSR=",W_LSR)
 
 # (III) make predictions for training and test data
-Y_train = np.zeros((N,1))  # REPLACE THIS BY PROGNOSIS FOR TRAINING DATA X! (result should be N x 1 matrix, i.e., one prognosis per row)
-Y_test = np.zeros((N,1))   # REPLACE THIS BY PROGNOSIS FOR TEST DATA X_test! (result should be N x 1 matrix, i.e., one prognosis per row)
+Y_train = [np.sum(np.dot(W_LSR.T, PHI[i])) for i in range(N)]   # 
+Y_test = [np.sum(np.dot(W_LSR.T, PHI_test[i])) for i in range(N)]
 print("Y_test=",Y_test)
 print("T_test=",T_test)
 print("training data error = ", getDataError(Y_train,T))
@@ -55,7 +58,7 @@ print("mean weight = ", np.mean(np.mean(np.abs(W_LSR))))
 # (IV) plot data
 ymin,ymax = -50.0,150.0                     # interval of y data
 x_=np.arange(xmin,xmax,0.01)                # densely sampled x values
-Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_]);   # least squares prediction
+Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_])    # least squares prediction
 Y_true = fun_true(x_).flat
 
 fig = plt.figure()

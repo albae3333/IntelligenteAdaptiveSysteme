@@ -11,19 +11,19 @@ from V2A2_Regression import *
 
 # ***** MAIN PROGRAM ********
 # (I) Hyper-Parameters
-S=3;               # S-fold cross-validation
-lmbda=1;           # regularization parameter (lambda>0 avoids also singularities)
-K=1;               # K for K-Nearest Neighbors
-flagKLinReg = 0;   # if flag==1 and K>=D then do a linear regression of the KNNs to make prediction
-deg=1;             # degree of basis function polynomials 
-flagSTD=0;         # if >0 then standardize data before training (i.e., scale X to mean value 0 and standard deviation 1)
-N_pred=5;          # number of predictions on the training set for testing
-x_test_1 = [0,0,0,0,0];   # REPLACE dummy code: define test vector 1
-x_test_2 = [0,0,0,0,0];   # REPLACE dummy code: define test vector 2
+S=3                # S-fold cross-validation
+lmbda=1            # regularization parameter (lambda>0 avoids also singularities)
+K=1                # K for K-Nearest Neighbors
+flagKLinReg = 0    # if flag==1 and K>=D then do a linear regression of the KNNs to make prediction
+deg=1              # degree of basis function polynomials 
+flagSTD=0          # if >0 then standardize data before training (i.e., scale X to mean value 0 and standard deviation 1)
+N_pred=5           # number of predictions on the training set for testing
+x_test_1 = [0,0,0,0,0]    # REPLACE dummy code: define test vector 1
+x_test_2 = [0,0,0,0,0]    # REPLACE dummy code: define test vector 2
 
 # (II) Load data 
 fname='../DATA/AirfoilSelfNoise/airfoil_self_noise.xls'
-airfoil_data = pd.read_excel(fname,0); # load data as pandas data frame 
+airfoil_data = pd.read_excel(fname,0)  # load data as pandas data frame 
 T = airfoil_data.values[:,5]           # target values = noise load (= column 5 of data table)
 X = airfoil_data.values[:,:5]          # feature vectors (= column 0-4 of data table)
 N,D=X.shape                            # size and dimensionality of data set
