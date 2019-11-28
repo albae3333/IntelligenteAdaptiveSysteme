@@ -27,9 +27,9 @@ np.random.seed(10)                            # set seed of random generator (to
 N=10                                          # number of data samples
 xmin,xmax=-5.0,5.0                            # x limits
 sd_noise=10                                   # standard deviation of Guassian noise
-X,T           = generateDataSet(N, xmin,xmax, sd_noise)             # generate training data
+X,T= generateDataSet(N, xmin,xmax, sd_noise)                        # generate training data
 X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate test data
-print("X=",X, "T=",T)
+print("X=",X, "\n\nT=",T)
 
 # (II) generate linear least squares model for regression
 lmbda=0                                                           # no regression
@@ -38,24 +38,29 @@ N,D = np.shape(X)                                                 # shape of dat
 N,K = np.shape(T)                                                 # shape of target value matrix T
 PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate design matrix
 N,M = np.shape(PHI)                                               # shape of design matrix
-print("PHI=", PHI)
-W_LSR = np.zeros((M,1))                                           # REPLACE THIS BY REGULARIZED LEAST SQUARES WEIGHTS!
-print("W_LSR=",W_LSR)
+print("\nPHI=", PHI)
+
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T,PHI)),PHI.T),T)
+
+print("\nW_LSR=",W_LSR)
+
 
 # (III) make predictions for test data
-Y_test = np.zeros((N,1))   # REPLACE THIS BY PROGNOSIS FOR TEST DATA X_test! (result should be N x 1 matrix, i.e., one prognosis per row)
-Y_learn = np.zeros((N,1))  # REPLACE THIS BY PROGNOSIS FOR TEST DATA X_test! (result should be N x 1 matrix, i.e., one prognosis per row)
-print("Y_test=",Y_test)
-print("T_test=",T_test)
-print("learn data error = ", getDataError(Y_learn,T)
-print("test data error = ", getDataError(Y_test,T_test)
-print("W_LSR=",W_LSR)
-print("mean weight = ", np.mean(np.mean(np.abs(W_LSR)))
+Y_test = [np.dot(W_LSR.T,PHI[1])>1 for i in range(N)]
+
+Y_learn = [np.dot(W_LSR.T,PHI[1])>1 for i in range(N)]
+
+print("\nY_test=",Y_test)
+print("\nT_test=",T_test)
+print("\nlearn data error = ", getDataError(Y_learn,T))
+print("\ntest data error = ", getDataError(Y_test,T_test))
+print("\nW_LSR=",W_LSR)
+print("\nmean weight = ", np.mean(np.mean(np.abs(W_LSR))))
 
 # (IV) plot data
 ymin,ymax = -50.0,150.0                     # interval of y data
 x_=np.arange(xmin,xmax,0.01)                # densely sampled x values
-Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_]);   # least squares prediction
+Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_])   # least squares prediction
 Y_true = fun_true(x_).flat
 
 fig = plt.figure()
