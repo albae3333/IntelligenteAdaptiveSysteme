@@ -6,9 +6,15 @@ import numpy as np
 import scipy.spatial
 from random import randint
 
+<<<<<<< HEAD
 # -----------------------------------------------------------------------------------------
 # base class for regressifiers
 # -----------------------------------------------------------------------------------------
+=======
+# ----------------------------------------------------------------------------------------- 
+# base class for regressifiers
+# ----------------------------------------------------------------------------------------- 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
 class Regressifier:
     """
     Abstract base class for regressifiers
@@ -24,6 +30,7 @@ class Regressifier:
         """
         pass
 
+<<<<<<< HEAD
     def predict(self,x):      # predict a target vector given the data vector x
         """
         Implementation of the regression algorithm; should be overwritten by any derived class
@@ -33,20 +40,39 @@ class Regressifier:
         return None
 
     def crossvalidate(self,S,X,T,dist=lambda t: np.linalg.norm(t)):  # do a S-fold cross validation
+=======
+    def predict(self,x):      # predict a target vector given the data vector x 
+        """
+        Implementation of the regression algorithm  should be overwritten by any derived class 
+        :param x: test data vector of size D
+        :returns: predicted target vector
+        """
+        return None           
+
+    def crossvalidate(self,S,X,T,dist=lambda t: np.linalg.norm(t)):  # do a S-fold cross validation 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         Do a S-fold cross validation
         :param S: Number of parts the data set is divided into
         :param X: Data matrix (one data vector per row)
+<<<<<<< HEAD
         :param T: Matrix of target vectors; T[n] is target vector of X[n]
         :param dist: a fuction dist(t) returning the length of vector t (default=Euklidean)
         :returns (E_dist,sd_dist,E_min,E_max) : mean, standard deviation, minimum, and maximum of absolute error
         :returns (Erel_dist,sdrel_dist,Erel_min,Erel_max) : mean, standard deviation, minimum, and maximum of relative error
+=======
+        :param T: Matrix of target vectors  T[n] is target vector of X[n]
+        :param dist: a fuction dist(t) returning the length of vector t (default=Euklidean)
+        :returns (E_dist,sd_dist,E_min,E_max) : mean, standard deviation, minimum, and maximum of absolute error 
+        :returns (Erel_dist,sdrel_dist,Erel_min,Erel_max) : mean, standard deviation, minimum, and maximum of relative error 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         X,T=np.array(X),np.array(T)                         # ensure array type
         N=len(X)                                            # N=number of data vectors
         perm = np.random.permutation(N)                     # do a random permutation of X and T...
         X1,T1=[X[i] for i in perm], [T[i] for i in perm]    # ... to get random partitions of the data set
         idxS = [range(i*N//S,(i+1)*N//S) for i in range(S)] # divide data set into S parts:
+<<<<<<< HEAD
         E_dist,E_dist2,E_max,E_min=0,0,-1,-1                # initialize first two moments of (absolute) regression error as well as max/min error
         Erel_dist,Erel_dist2,Erel_max,Erel_min=0,0,-1,-1    # initialize first two moments of relative regression error as well as max/min error
         for idxTest in idxS:                                # loop over all possible test data sets
@@ -55,15 +81,32 @@ class Regressifier:
             if(S<=1): idxLearn=idxTest                                                # if S==1 use entire data set for learning and testing
             X_learn, T_learn = np.array([X1[i] for i in idxLearn]), np.array([T1[i] for i in idxLearn]) # learn data
             X_test , T_test  = np.array([X1[i] for i in idxTest ]), np.array([T1[i] for i in idxTest ]) # test data
+=======
+        E_dist,E_dist2,E_max,E_min=0,0,-1,-1                # initialize first two moments of (absolute) regression error as well as max/min error 
+        Erel_dist,Erel_dist2,Erel_max,Erel_min=0,0,-1,-1    # initialize first two moments of relative regression error as well as max/min error 
+        for idxTest in idxS:                                # loop over all possible test data sets
+            # (i) generate training and testing data sets and train classifier        
+            idxLearn = [i for i in range(N) if i not in idxTest]                      # remaining indices (not in idxTest) are learning data
+            if(S<=1): idxLearn=idxTest                                                # if S==1 use entire data set for learning and testing
+            X_learn, T_learn = np.array([X1[i] for i in idxLearn]), np.array([T1[i] for i in idxLearn]) # learn data 
+            X_test , T_test  = np.array([X1[i] for i in idxTest ]), np.array([T1[i] for i in idxTest ]) # test data 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
             self.fit(X_learn,T_learn)                       # train regressifier
             # (ii) test regressifier
             for i in range(len(X_test)):  # loop over all data vectors to be tested
                 # (ii.a) regress for i-th test vector
                 xn_test = X_test[i].T                           # data vector for testing
+<<<<<<< HEAD
                 t_test = self.predict(xn_test)                  # predict target value for given test vector
                 # (ii.b) check for regression errors
                 t_true = T_test[i].T                            # true target value
                 d=dist(t_test-t_true)                           # (Euklidean) distance between t_test and t_true
+=======
+                t_test = self.predict(xn_test)                  # predict target value for given test vector 
+                # (ii.b) check for regression errors
+                t_true = T_test[i].T                            # true target value
+                d=dist(t_test-t_true)                           # (Euklidean) distance between t_test and t_true 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
                 dttrue=dist(t_true)                             # length of t_true
                 E_dist  = E_dist+d                              # sum up distances (for first moment)
                 E_dist2 = E_dist2+d*d                           # sum up squared distances (for second moment)
@@ -82,6 +125,7 @@ class Regressifier:
         Erel_dist2  = Erel_dist2/float(N)                       # estimate of second moment (expected squared error)
         Varrel_dist = Erel_dist2-Erel_dist*Erel_dist            # variance of error
         sdrel_dist  = np.sqrt(Varrel_dist)                      # standard deviation of error
+<<<<<<< HEAD
         return (E_dist,sd_dist,E_min,E_max), (Erel_dist,sdrel_dist,Erel_min,Erel_max) # return mean, standard deviation, minimum,
                                                                 # and maximum error (for absolute and relative distances)
 
@@ -92,18 +136,39 @@ class Regressifier:
 class DataScaler:
     """
     Class for standardizing data vectors
+=======
+        return (E_dist,sd_dist,E_min,E_max), (Erel_dist,sdrel_dist,Erel_min,Erel_max) # return mean, standard deviation, minimum, 
+                                                                # and maximum error (for absolute and relative distances)  
+
+
+# -------------------------------------------------------------------------------------------- 
+# DataScaler: scale data to standardize data distribution (for mean=0, standard deviation =1)  
+# -------------------------------------------------------------------------------------------- 
+class DataScaler: 
+    """
+    Class for standardizing data vectors 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
     Some regression methods require standardizing of data before training to avoid numerical instabilities!!
     """
 
     def __init__(self,X):               # X is data matrix, where rows are data vectors
         """
         Constructor: Set parameters (mean, std,...) to standardize data matrix X
+<<<<<<< HEAD
         :param X: Data matrix of size NxD the standardization parameters (mean, std, ...) should be computed for
         :returns: object of class DataScaler
         """
         self.meanX = np.mean(X,0)       # mean values for each feature column
         self.stdX  = np.std(X,0)        # standard deviation for each feature column
         if isinstance(self.stdX,(list,tuple,np.ndarray)):
+=======
+        :param X: Data matrix of size NxD the standardization parameters (mean, std, ...) should be computed for 
+        :returns: object of class DataScaler
+        """
+        self.meanX = np.mean(X,0)       # mean values for each feature column
+        self.stdX  = np.std(X,0)        # standard deviation for each feature column 
+        if isinstance(self.stdX,(list,tuple,np.ndarray)): 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
             self.stdX[self.stdX==0]=1.0 # do not scale data with zero std (that is, constant features)
         else:
             if(self.stdX==0): self.stdX=1.0   # in case stdX is a scalar
@@ -112,22 +177,35 @@ class DataScaler:
 
     def scale(self,x):                  # scales data vector x to mean=0 and std=1
         """
+<<<<<<< HEAD
         scale data vector (or data matrix) x to mean=0 and s.d.=1
         :param x: data vector or data matrix
         :returns: scaled (standardized) data vector or data matrix
+=======
+        scale data vector (or data matrix) x to mean=0 and s.d.=1 
+        :param x: data vector or data matrix  
+        :returns: scaled (standardized) data vector or data matrix 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         return np.multiply(x-self.meanX,self.stdXinv)
 
     def unscale(self,x):                # unscale data vector x to original distribution
         """
+<<<<<<< HEAD
         unscale data vector (or data matrix) x to original data ranges
         :param x: standardized data vector or data matrix
         :returns: unscaled data vector or data matrix
+=======
+        unscale data vector (or data matrix) x to original data ranges  
+        :param x: standardized data vector or data matrix  
+        :returns: unscaled data vector or data matrix 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         return np.multiply(x,self.stdX)+self.meanX
 
     def printState(self):
         """
+<<<<<<< HEAD
         print standardization parameters (mean value, standard deviation (std), and inverse of std)
         """
         print "mean=",self.meanX, " std=",self.stdX, " std_inv=",self.stdXinv
@@ -142,6 +220,22 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
     :param x: data vector to be transformed into a feature vector
     :param deg: degree of polynomial
     :returns phi: feature vector
+=======
+        print standardization parameters (mean value, standard deviation (std), and inverse of std)  
+        """
+        print("mean=",self.meanX, " std=",self.stdX, " std_inv=",self.stdXinv)
+
+
+# ----------------------------------------------------------------------------------------- 
+# function to compute polynomial basis functions 
+# ----------------------------------------------------------------------------------------- 
+def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix  returns an 1xM matrix 
+    """
+    polynomial basis function vector  may be used to transform a data vector x into a feature vector phi(x) having polynomial basis function components
+    :param x: data vector to be transformed into a feature vector
+    :param deg: degree of polynomial
+    :returns phi: feature vector 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
     Example: phi_polynomial(x,3) returns for one-dimensional x the vector [1, x, x*x, x*x*x]
     """
     x=np.array(np.mat(x))[0]           # ensure that x is a 1D array (first row of x)
@@ -153,7 +247,11 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
         phi = np.array([])
         if(deg>=0):
             phi = np.concatenate((phi,[1]))      # include degree 0 terms
+<<<<<<< HEAD
             if(deg>=1):
+=======
+            if(deg>=1): 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
                 phi = np.concatenate((phi,x))    # includes degree 1 terms
                 if(deg>=2):
                     for i in range(D):
@@ -171,7 +269,11 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
 # -----------------------------------------------------------------------------------------
 class LSRRegressifier(Regressifier):
     """
+<<<<<<< HEAD
     Class for Least Squares (or Maximum Likelihood) Linear Regressifier with sum of squares regularization
+=======
+    Class for Least Squares (or Maximum Likelihood) Linear Regressifier with sum of squares regularization 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
     """
 
     def __init__(self,lmbda=0,phi=lambda x: phi_polynomial(x,1),flagSTD=0,eps=1e-6):
@@ -185,19 +287,32 @@ class LSRRegressifier(Regressifier):
         """
         self.lmbda=lmbda       # set regression parameter (default 0)
         self.phi=phi           # set basis functions used for linear regression (default: degree 1 polynomials)
+<<<<<<< HEAD
         self.flagSTD=flagSTD;  # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
         self.eps=eps;          # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
+=======
+        self.flagSTD=flagSTD   # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
+        self.eps=eps           # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
 
 
     def fit(self,X,T,lmbda=None,phi=None,flagSTD=None): # train/compute LS regression with data matrix X and target value matrix T
         """
+<<<<<<< HEAD
         Train regressifier (see lecture manuscript, theorem 3.11, p33)
+=======
+        Train regressifier (see lecture manuscript, theorem 3.11, p33) 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         :param X: Data matrix of size NxD, contains in each row a data vector of size D
         :param T: Target vector matrix of size NxK, contains in each row a target vector of size K
         :param lmbda: Regularization coefficient lambda
         :param phi: Basis-functions used by the linear model (default linear polynomial)
         :param flagSTD: If >0 then standardize data X and target values T (to mean 0 and s.d. 1)
+<<<<<<< HEAD
         :returns: flagOK: if >0 then all is ok, otherwise matrix inversion was bad conditioned (and results should not be trusted!!!)
+=======
+        :returns: flagOK: if >0 then all is ok, otherwise matrix inversion was bad conditioned (and results should not be trusted!!!) 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         # (i) set parameters
         if lmbda==None: lmbda=self.lmbda       # reset regularization coefficient?
@@ -210,19 +325,31 @@ class LSRRegressifier(Regressifier):
             X=self.datascalerX.scale(X)        # scale all features (=columns) of data matrix X to mean=0 and s.d.=1
             T=self.datascalerT.scale(T)        # ditto for target matrix T
         # (iii) compute weight matrix and check numerical condition
+<<<<<<< HEAD
         flagOK,maxZ=1,0;                       # if <1 then matrix inversion is numerically infeasible
         try:
             self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
             self.M = self.phi(self.D*[0]).size # get number of basis functions
+=======
+        flagOK,maxZ=1,0                        # if <1 then matrix inversion is numerically infeasible
+        try:
+            self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
+            self.M = self.phi(self.D*[0]).size # get number of basis functions  
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
             self.K = T.shape[1]                # DELTE dummy code (just required for dummy code in predict(.): number of output dimensions
             PHI = None                         # REPLACE dummy code: compute design matrix
             PHIT_PHI_lmbdaI = None             # REPLACE dummy code: compute PHI_T*PHI+lambda*I
             PHIT_PHI_lmbdaI_inv = None         # REPLACE dummy code: compute inverse matrix (may be bad conditioned and fail)
+<<<<<<< HEAD
             self.W_LSR = None                  # REPLACE dummy code: compute regularized least squares weights
+=======
+            self.W_LSR = None                  # REPLACE dummy code: compute regularized least squares weights 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
             # (iv) check numerical condition
             Z=None                             # REPLACE dummy code: Compute Z:=PHIT_PHI_lmbdaI*PHIT_PHI_lmbdaI_inv-I which should become the zero matrix if good conditioned!
             maxZ = 0                           # REPLACE dummy code: Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
+<<<<<<< HEAD
         except:
             flagOK=0;
             print "EXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, " maxZ=", maxZ
@@ -230,33 +357,61 @@ class LSRRegressifier(Regressifier):
         return flagOK
 
     def predict(self,x,flagSTD=None):      # predict a target value given data vector x
+=======
+        except: 
+            flagOK=0 
+            print("EXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, " maxZ=", maxZ)
+            raise
+        return flagOK 
+
+    def predict(self,x,flagSTD=None):      # predict a target value given data vector x 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         """
         predicts the target value y(x) for a test vector x
         :param x: test data vector of size D
         :param flagSTD: If >0 then standardize data X and target values T (to mean 0 and s.d. 1)
         :returns: predicted target vector y of size K
         """
+<<<<<<< HEAD
         if flagSTD==None: flagSTD=self.flagSTD      # standardazion?
         if flagSTD>0: x=self.datascalerX.scale(x)   # if yes, then scale x before computing the prediction!
         phi_of_x = self.phi(x)                      # compute feature vector phi_of_x for data vector x
         y=np.zeros((1,self.K)).T                    # REPLACE dummy code:  compute prediction y for data vector x
+=======
+        if flagSTD==None: flagSTD=self.flagSTD      # standardization?
+        if flagSTD>0: x=self.datascalerX.scale(x)   # if yes, then scale x before computing the prediction!
+        phi_of_x = self.phi(x)                      # compute feature vector phi_of_x for data vector x
+        y=np.zeros((1,self.K)).T                    # REPLACE dummy code:  compute prediction y for data vector x 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         if flagSTD>0: y=self.datascalerT.unscale(y) # scale prediction back to original range?
         return y                  # return prediction y for data vector x
 
 
 
 # -----------------------------------------------------------------------------------------
+<<<<<<< HEAD
 # KNN regression
 # -----------------------------------------------------------------------------------------
 class KNNRegressifier(Regressifier):
     """
     Class for fast K-Nearest-Neighbor-Regression using KD-trees
+=======
+# KNN regression 
+# -----------------------------------------------------------------------------------------
+class KNNRegressifier(Regressifier): 
+    """
+    Class for fast K-Nearest-Neighbor-Regression using KD-trees 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
     """
 
     def __init__(self,K,flagKLinReg=0):
         """
         Constructor of class KNNRegressifier
+<<<<<<< HEAD
         :param K: number of nearest neighbors that are used to compute prediction
+=======
+        :param K: number of nearest neighbors that are used to compute prediction 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         :flagKLinReg: if >0 then the do a linear (least squares) regression on the the K nearest neighbors and their target values
                       otherwise just take the mean of the K nearest neighbors target vectors
         :returns: -
@@ -267,7 +422,11 @@ class KNNRegressifier(Regressifier):
 
     def fit(self,X,T): # train/compute regression with lists of data vectors X and target values T
         """
+<<<<<<< HEAD
         Train regressifier by stroing X and T and by creating a KD-Tree based on X
+=======
+        Train regressifier by stroing X and T and by creating a KD-Tree based on X   
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         :param X: Data matrix of size NxD, contains in each row a data vector of size D
         :param T: Target vector matrix of size NxK, contains in each row a target vector of size K
         :returns: -
@@ -276,11 +435,19 @@ class KNNRegressifier(Regressifier):
         self.N, self.D = self.X.shape              # store data number N and dimension D
         self.kdtree = scipy.spatial.KDTree(self.X) # do an indexing of the feature vectors
 
+<<<<<<< HEAD
     def predict(self,x,K=None,flagKLinReg=None):   # predict a target value given data vector x
         """
         predicts the target value y(x) for a test vector x
         :param x: test data vector of size D
         :param K: number of nearest neighbors that are used to compute prediction
+=======
+    def predict(self,x,K=None,flagKLinReg=None):   # predict a target value given data vector x 
+        """
+        predicts the target value y(x) for a test vector x
+        :param x: test data vector of size D
+        :param K: number of nearest neighbors that are used to compute prediction 
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
         :flagKLinReg: if >0 then the do a linear (least squares) regression on the the K nearest neighbors and their target values
                       otherwise just take the mean of the K nearest neighbors target vectors
         :returns: predicted target vector of size K
@@ -308,9 +475,15 @@ class KNNRegressifier(Regressifier):
 # *******************************************************
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     print "\n-----------------------------------------"
     print "Example: 1D-linear regression problem"
     print "-----------------------------------------"
+=======
+    print("\n-----------------------------------------")
+    print("Example: 1D-linear regression problem")
+    print("-----------------------------------------")
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
     # (i) generate data
     N=100
     w0,w1=4,2                 # parameters of line
@@ -320,6 +493,7 @@ if __name__ == '__main__':
     sd_noise = 1.0            # noise power (=standard deviation)
     T=T+w1*X+w0 + np.random.normal(0,sd_noise,T.shape)  # generate noisy target values on line y=w0+w1*x
     par_lambda = 0            # regularization parameter
+<<<<<<< HEAD
     print "X=",X
     print "T=",T
 
@@ -339,10 +513,32 @@ if __name__ == '__main__':
     print "lsr.W_LSR=",lsr.W_LSR           # weight vector (should be approximately [w0,w1]=[4,2])
     x=np.array([3.1415]).T
     print "prediction of x=",x,"is y=",lsr.predict(x)
+=======
+    print("X=",X)
+    print("T=",T)
+
+    # (ii) define basis functions (phi should return list of basis functions  x should be a list)
+    deg=2                                # degree of polynomial
+    phi=lambda x: phi_polynomial(x,2)    # define phi by polynomial basis-functions up to degree deg 
+    print("phi(4)=", phi([4]))           # print basis function vector [1, x, x*x ...] for x=4
+    print("phi([1,2])=", phi([1,2]))     # print basis function vector for two-dim. inputs (yields many output components) 
+
+    # (iii) compute LSR regression
+    print("\n-----------------------------------------")
+    print("Do a Least-Squares-Regression")
+    print("-----------------------------------------")
+    lmbda=0 
+    lsr = LSRRegressifier(lmbda,phi)
+    lsr.fit(X,T)
+    print("lsr.W_LSR=",lsr.W_LSR)        # weight vector (should be approximately [w0,w1]=[4,2])
+    x=np.array([3.1415]).T
+    print("prediction of x=",x,"is y=",lsr.predict(x))
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
 
     # do S-fold crossvalidation
     S=3
     err_abs,err_rel = lsr.crossvalidate(S,X,T)
+<<<<<<< HEAD
     print "LSRRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel
 
     # (iv) compute KNN-regression
@@ -357,4 +553,21 @@ if __name__ == '__main__':
     # do S-fold crossvalidation
     err_abs,err_rel = knnr.crossvalidate(S,X,T)
     print "KNNRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel
+=======
+    print("LSRRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel)
+
+    # (iv) compute KNN-regression
+    print("\n-----------------------------------------")
+    print("Do a KNN-Regression")
+    print("-----------------------------------------")
+    K=5 
+    knnr = KNNRegressifier(K)
+    knnr.fit(X,T)
+    print("prediction of x=",x,"is y=",knnr.predict(x))
+
+    # do S-fold crossvalidation
+    err_abs,err_rel = knnr.crossvalidate(S,X,T)
+    print("KNNRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel)
+
+>>>>>>> 0085e8911e8d54a61b6fb3bd7c90085614910798
 
