@@ -70,8 +70,8 @@ f=plt.figure()
 a = f.add_subplot(111)
 a.plot(X1.T[0],X1.T[1],'rx')               # plot data vectors of class 1
 a.plot(X2.T[0],X2.T[1],'g+')               # plot data vectors of class 2
-a.set_xlabel('feature x1');
-a.set_ylabel('feature x2');
+a.set_xlabel('feature x1')
+a.set_ylabel('feature x2')
 a.set_title('Naive: '+str(t_naive)+'sec/ KD-Tree: '+str(t_kdtree)+'sec; Classification Error='+str(pE_naive)+'/'+str(pE_kdtree));
 
 plt.show()

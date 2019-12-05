@@ -223,7 +223,7 @@ if __name__ == '__main__':
     c,pc,idx_knn=knnc.predict(x,k)
 
     k = 1
-    c, pc, idx_knn = knnc.predict(x, k)
+    pc, c, idx_knn = knnc.predict(x, k)
 
     print("\nClassification with the naive KNN-classifier:")
     print("Test vector is most likely from class ", c)

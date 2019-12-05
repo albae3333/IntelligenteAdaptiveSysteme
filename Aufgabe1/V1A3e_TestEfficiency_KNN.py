@@ -70,5 +70,3 @@ a.set_title('Computing time for '+str(S)+'-fold cross validation for KNN with K=
 a.grid()
 
 plt.show()
-
-
