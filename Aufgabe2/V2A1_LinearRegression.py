@@ -1,109 +1,63 @@
 # V2A1_LinearRegression.py
 # Programmgeruest zu Versuch 2, Aufgabe 1
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
 
 def fun_true(X):                              # compute 1-dim. parable function  X must be Nx1 data matrix
-
     w2,w1,w0 = 3.0,-1.0,2.0                   # true parameters of parable y(x)=w0+w1*x+w2*x*x
     return w0+w1*X+w2*np.multiply(X,X)        # return function values (same size as X)
 
 def generateDataSet(N,xmin,xmax,sd_noise):    # generate data matrix X and target values T
-
-    X=xmin+np.random.rand(N,1)*(xmax-xmin)    # get random x values uniformly in [xmin;xmax)
-    T=fun_true(X)                             # target values without noise
-    if(sd_noise>0):
-        T=T+np.random.normal(0,sd_noise,X.shape) # add noise
-
-                                              # N = number of values  
+                                              # N = number of values
     X=xmin+np.random.rand(N,1)*(xmax-xmin)    # get random x values uniformly in [xmin xmax)
     T=fun_true(X)                             # target values without noise
     if(sd_noise>0):
-        T=T+np.random.normal(0,sd_noise,X.shape) # add noise 
-
+        T=T+np.random.normal(0,sd_noise,X.shape) # add noise
     return X,T
 
 def getDataError(Y,T):                        # compute data error (least squares) between prediction Y and true target values T
     D=np.multiply(Y-T,Y-T)                    # squared differences between Y and T
     return 0.5*sum(sum(D))                    # return least-squares data error function E_D
+
 def phi_polynomial(x,deg=1):                            # compute polynomial basis function vector phi(x) for data x
     assert(np.shape(x)==(1,)), "currently only 1dim data supported"
     return np.array([x[0]**i for i in range(deg+1)]).T  # returns feature vector phi(x)=[1 x x**2 x**3 ... x**deg]
 
 # (I) generate data
-
-def phi_polynomial(x,deg=1):                            # compute polynomial basis function vector phi(x) for data x 
-    assert(np.shape(x)==(1,)), "currently only 1dim data supported"
-    return np.array([x[0]**i for i in range(deg+1)]).T  # returns feature vector phi(x)=[1 x x**2 x**3 ... x**deg]
-
-# (I) generate data 
-
 np.random.seed(10)                            # set seed of random generator (to be able to regenerate data)
 N=10                                          # number of data samples
 xmin,xmax=-5.0,5.0                            # x limits
 sd_noise=10                                   # standard deviation of Guassian noise
-
-X,T= generateDataSet(N, xmin,xmax, sd_noise)                        # generate training data
-X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate test data
-print("X=",X, "\n\nT=",T)
-
 X,T           = generateDataSet(N, xmin,xmax, sd_noise)             # generate training data
 X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate test data
 print("X=",X, "T=",T)
 
 # (II) generate linear least squares model for regression
 lmbda=0                                                           # no regression
-deg=5                                                             # degree of polynomial basis functions
+deg=9                                                             # degree of polynomial basis functions
 N,D = np.shape(X)                                                 # shape of data matrix X
 N,K = np.shape(T)                                                 # shape of target value matrix T
 PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate design matrix
-
-N,M = np.shape(PHI)                                               # shape of design matrix
-print("\nPHI=", PHI)
-
-W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T,PHI)),PHI.T),T)
-
-print("\nW_LSR=",W_LSR)
-
-
-# (III) make predictions for test data
-Y_test = [np.dot(W_LSR.T,PHI[1])>1 for i in range(N)]
-
-Y_learn = [np.dot(W_LSR.T,PHI[1])>1 for i in range(N)]
-
-print("\nY_test=",Y_test)
-print("\nT_test=",T_test)
-print("\nlearn data error = ", getDataError(Y_learn,T))
-print("\ntest data error = ", getDataError(Y_test,T_test))
-print("\nW_LSR=",W_LSR)
-print("\nmean weight = ", np.mean(np.mean(np.abs(W_LSR))))
-
 PHI_test = np.array([phi_polynomial(X_test[i],deg).T for i in range(N)])    # generate design matrix for X_test
 N,M = np.shape(PHI)                                               # shape of design matrix
-print("PHI=", PHI)
-print("PHI_test=", PHI_test)
-W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T)                                           
-print("W_LSR=",W_LSR)
+print("\nPHI=\n", PHI)
+print("\n\nPHI_test=\n", PHI_test)
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T) # calc weights
 
 # (III) make predictions for training and test data
-Y_train = [np.sum(np.dot(W_LSR.T, PHI[i])) for i in range(N)]       # bestimmen welche Klasse es ist anhand der Werte
-Y_test = [np.sum(np.dot(W_LSR.T, PHI_test[i])) for i in range(N)]   # bestimmen welche Klasse es ist anhand der Werte
-print("Y_test=",Y_test)
-print("T_test=",T_test)
-print("training data error = ", getDataError(Y_train,T))
-print("test data error = ", getDataError(Y_test,T_test))
-print("W_LSR=",W_LSR)
-print("mean weight = ", np.mean(np.mean(np.abs(W_LSR))))
-
+Y_train = [np.dot(W_LSR.T, PHI[i]) for i in range(N)]       # calc Diskriminanzwert for train data
+Y_test = [np.dot(W_LSR.T, PHI_test[i]) for i in range(N)]   # calc Diskriminanzwert for test data
+print("\n\nY_test=\n",Y_test)
+print("\n\nT_test=\n",T_test)
+print("\n\ntraining data error = \n", getDataError(Y_train,T))
+print("\n\ntest data error = \n", getDataError(Y_test,T_test))
+print("\n\nW_LSR=\n",W_LSR)
+print("\n\nmean weight = \n", np.mean(np.mean(np.abs(W_LSR))))
 
 # (IV) plot data
 ymin,ymax = -50.0,150.0                     # interval of y data
 x_=np.arange(xmin,xmax,0.01)                # densely sampled x values
-
-Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_])   # least squares prediction
-
 Y_LSR = np.array([np.dot(W_LSR.T,np.array([phi_polynomial([x],deg)]).T)[0] for x in x_])    # least squares prediction
-
 Y_true = fun_true(x_).flat
 
 fig = plt.figure()
