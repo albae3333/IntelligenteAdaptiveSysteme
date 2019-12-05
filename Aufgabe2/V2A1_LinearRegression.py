@@ -42,12 +42,11 @@ PHI_test = np.array([phi_polynomial(X_test[i],deg).T for i in range(N)])    # ge
 N,M = np.shape(PHI)                                               # shape of design matrix
 print("PHI=", PHI)
 print("PHI_test=", PHI_test)
-W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T)                                           
-print("W_LSR=",W_LSR)
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T) # calc weights
 
 # (III) make predictions for training and test data
-Y_train = [np.sum(np.dot(W_LSR.T, PHI[i])) for i in range(N)]       # bestimmen welche Klasse es ist anhand der Werte
-Y_test = [np.sum(np.dot(W_LSR.T, PHI_test[i])) for i in range(N)]   # bestimmen welche Klasse es ist anhand der Werte
+Y_train = [np.dot(W_LSR.T, PHI[i]) for i in range(N)]       # calc Diskriminanzwert for train data
+Y_test = [np.dot(W_LSR.T, PHI_test[i]) for i in range(N)]   # calc Diskriminanzwert for test data
 print("Y_test=",Y_test)
 print("T_test=",T_test)
 print("training data error = ", getDataError(Y_train,T))
