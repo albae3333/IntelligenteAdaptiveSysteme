@@ -31,16 +31,6 @@ class Regressifier:
         """
         return None
 
-    def crossvalidate(self,S,X,T,dist=lambda t: np.linalg.norm(t)):  # do a S-fold cross validation
-
-    def predict(self,x):      # predict a target vector given the data vector x
-        """
-        Implementation of the regression algorithm  should be overwritten by any derived class 
-        :param x: test data vector of size D
-        :returns: predicted target vector
-        """
-        return None           
-
     def crossvalidate(self,S,X,T,dist=lambda t: np.linalg.norm(t)):  # do a S-fold cross validation 
         """
         Do a S-fold cross validation
@@ -50,11 +40,8 @@ class Regressifier:
         :param dist: a fuction dist(t) returning the length of vector t (default=Euklidean)
         :returns (E_dist,sd_dist,E_min,E_max) : mean, standard deviation, minimum, and maximum of absolute error
         :returns (Erel_dist,sdrel_dist,Erel_min,Erel_max) : mean, standard deviation, minimum, and maximum of relative error
-        :param T: Matrix of target vectors  T[n] is target vector of X[n]
-        :param dist: a fuction dist(t) returning the length of vector t (default=Euklidean)
-        :returns (E_dist,sd_dist,E_min,E_max) : mean, standard deviation, minimum, and maximum of absolute error 
-        :returns (Erel_dist,sdrel_dist,Erel_min,Erel_max) : mean, standard deviation, minimum, and maximum of relative error 
         """
+
         X,T=np.array(X),np.array(T)                         # ensure array type
         N=len(X)                                            # N=number of data vectors
         perm = np.random.permutation(N)                     # do a random permutation of X and T...
@@ -119,10 +106,8 @@ class Regressifier:
 class DataScaler:
     """
     Class for standardizing data vectors
-        return (E_dist,sd_dist,E_min,E_max), (Erel_dist,sdrel_dist,Erel_min,Erel_max) # return mean, standard deviation, minimum,
-                                                                # and maximum error (for absolute and relative distances)  
-
-Class for standardizing data vectors
+        return (E_dist,sd_dist,E_min,E_max), (Erel_dist,sdrel_dist,Erel_min,Erel_max)
+        return mean, standard deviation, minimum, and maximum error (for absolute and relative distances)
     Some regression methods require standardizing of data before training to avoid numerical instabilities!!
     """
 
@@ -134,9 +119,8 @@ Class for standardizing data vectors
         """
         self.meanX = np.mean(X,0)       # mean values for each feature column
         self.stdX  = np.std(X,0)        # standard deviation for each feature column
-        if isinstance(self.stdX,(list,tuple,np.ndarray)):
-        :param X: Data matrix of size NxD the standardization parameters (mean, std, ...) should be computed for
-        :returns: object of class DataScaler
+        if isinstance(self.stdX,(list,tuple,np.ndarray)):       # :param X: Data matrix of size NxD the standardization parameters (mean, std, ...) should be computed for
+                                                                # :returns: object of class DataScaler
 
         self.meanX = np.mean(X,0)       # mean values for each feature column
         self.stdX  = np.std(X,0)        # standard deviation for each feature column 
@@ -176,24 +160,10 @@ Class for standardizing data vectors
         print("mean=",self.meanX, " std=",self.stdX, " std_inv=",self.stdXinv)
 
 
-# -----------------------------------------------------------------------------------------
-# function to compute polynomial basis functions
-# -----------------------------------------------------------------------------------------
-def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix; returns an 1xM matrix
-    """
-    polynomial basis function vector; may be used to transform a data vector x into a feature vector phi(x) having polynomial basis function components
-    :param x: data vector to be transformed into a feature vector
-    :param deg: degree of polynomial
-    :returns phi: feature vector
-        print standardization parameters (mean value, standard deviation (std), and inverse of std)  
-        """
-        print("mean=",self.meanX, " std=",self.stdX, " std_inv=",self.stdXinv)
-
-
 # ----------------------------------------------------------------------------------------- 
 # function to compute polynomial basis functions 
 # ----------------------------------------------------------------------------------------- 
-def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix  returns an 1xM matrix 
+    def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD matrix  returns an 1xM matrix
     """
     polynomial basis function vector  may be used to transform a data vector x into a feature vector phi(x) having polynomial basis function components
     :param x: data vector to be transformed into a feature vector
@@ -230,7 +200,6 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
 class LSRRegressifier(Regressifier):
     """
     Class for Least Squares (or Maximum Likelihood) Linear Regressifier with sum of squares regularization
-    Class for Least Squares (or Maximum Likelihood) Linear Regressifier with sum of squares regularization
     """
 
     def __init__(self,lmbda=0,phi=lambda x: phi_polynomial(x,1),flagSTD=0,eps=1e-6):
@@ -253,15 +222,12 @@ class LSRRegressifier(Regressifier):
     def fit(self,X,T,lmbda=None,phi=None,flagSTD=None): # train/compute LS regression with data matrix X and target value matrix T
         """
         Train regressifier (see lecture manuscript, theorem 3.11, p33)
-        Train regressifier (see lecture manuscript, theorem 3.11, p33)
         :param X: Data matrix of size NxD, contains in each row a data vector of size D
         :param T: Target vector matrix of size NxK, contains in each row a target vector of size K
         :param lmbda: Regularization coefficient lambda
         :param phi: Basis-functions used by the linear model (default linear polynomial)
         :param flagSTD: If >0 then standardize data X and target values T (to mean 0 and s.d. 1)
         :returns: flagOK: if >0 then all is ok, otherwise matrix inversion was bad conditioned (and results should not be trusted!!!)
-=======
-        :returns: flagOK: if >0 then all is ok, otherwise matrix inversion was bad conditioned (and results should not be trusted!!!) 
         """
         # (i) set parameters
         if lmbda==None: lmbda=self.lmbda       # reset regularization coefficient?
@@ -293,7 +259,7 @@ class LSRRegressifier(Regressifier):
             maxZ = 0                           # REPLACE dummy code: Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
         except:
-            flagOK=0;
+            flagOK=0
             print("EXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, " maxZ=", maxZ)
             raise
         return flagOK
@@ -332,11 +298,6 @@ class LSRRegressifier(Regressifier):
 class KNNRegressifier(Regressifier):
     """
     Class for fast K-Nearest-Neighbor-Regression using KD-trees
-# KNN regression 
-# -----------------------------------------------------------------------------------------
-class KNNRegressifier(Regressifier): 
-
-    Class for fast K-Nearest-Neighbor-Regression using KD-trees 
     """
 
     def __init__(self,K,flagKLinReg=0):
@@ -364,12 +325,6 @@ class KNNRegressifier(Regressifier):
         self.N, self.D = self.X.shape              # store data number N and dimension D
         self.kdtree = scipy.spatial.KDTree(self.X) # do an indexing of the feature vectors
 
-    def predict(self,x,K=None,flagKLinReg=None):   # predict a target value given data vector x
-        """
-        predicts the target value y(x) for a test vector x
-        :param x: test data vector of size D
-        :param K: number of nearest neighbors that are used to compute prediction
-        """
     def predict(self,x,K=None,flagKLinReg=None):
         """
           predict a target value given data vector x
