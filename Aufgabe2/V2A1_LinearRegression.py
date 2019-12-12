@@ -32,14 +32,10 @@ X,T           = generateDataSet(N, xmin,xmax, sd_noise)             # generate t
 X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate test data
 print("X=",X, "T=",T)
 
+
 # (II) generate linear least squares model for regression
-<<<<<<< HEAD
 lmbda=19                                                          # no regression
 deg=9                                                             # degree of polynomial basis functions
-=======
-lmbda=0.0000000001                                                           # no regression
-deg=9                                                            # degree of polynomial basis functions
->>>>>>> 866db00c1c47bffdae9c72c3cbad45769bd749d8
 N,D = np.shape(X)                                                 # shape of data matrix X
 N,K = np.shape(T)                                                 # shape of target value matrix T
 PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate design matrix
@@ -49,12 +45,6 @@ N,M = np.shape(PHI)                                               # shape of des
 #print("\nPHI=\n", PHI)
 #print("\n\nPHI_test=\n", PHI_test)
 
-<<<<<<< HEAD
-=======
-print("PHI=", PHI)
-print("PHI_test=", PHI_test)
-
->>>>>>> 866db00c1c47bffdae9c72c3cbad45769bd749d8
 W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)+lmbda*np.eye(N)),PHI.T),T) # calc weights
 
 # (III) make predictions for training and test data
