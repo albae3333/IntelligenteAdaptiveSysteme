@@ -33,7 +33,7 @@ X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate t
 print("X=",X, "T=",T)
 
 # (II) generate linear least squares model for regression
-lmbda=0                                                           # no regression
+lmbda=19                                                          # no regression
 deg=9                                                             # degree of polynomial basis functions
 N,D = np.shape(X)                                                 # shape of data matrix X
 N,K = np.shape(T)                                                 # shape of target value matrix T
@@ -41,32 +41,22 @@ PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate des
 PHI_test = np.array([phi_polynomial(X_test[i],deg).T for i in range(N)])    # generate design matrix for X_test
 N,M = np.shape(PHI)                                               # shape of design matrix
 
-print("\nPHI=\n", PHI)
-print("\n\nPHI_test=\n", PHI_test)
+#print("\nPHI=\n", PHI)
+#print("\n\nPHI_test=\n", PHI_test)
 
-print("PHI=", PHI)
-print("PHI_test=", PHI_test)
-
-W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T) # calc weights
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)+lmbda*np.eye(N)),PHI.T),T) # calc weights
 
 # (III) make predictions for training and test data
 Y_train = [np.dot(W_LSR.T, PHI[i]) for i in range(N)]       # calc Diskriminanzwert for train data
 Y_test = [np.dot(W_LSR.T, PHI_test[i]) for i in range(N)]   # calc Diskriminanzwert for test data
 
-print("\n\nY_test=\n",Y_test)
-print("\n\nT_test=\n",T_test)
-print("\n\ntraining data error = \n", getDataError(Y_train,T))
-print("\n\ntest data error = \n", getDataError(Y_test,T_test))
-print("\n\nW_LSR=\n",W_LSR)
-print("\n\nmean weight = \n", np.mean(np.mean(np.abs(W_LSR))))
-
-print("Y_test=",Y_test)
-print("T_test=",T_test)
+#print("Y_test=",Y_test)
+#print("T_test=",T_test)
 print("training data error = ", getDataError(Y_train,T))
 print("test data error = ", getDataError(Y_test,T_test))
 print("W_LSR=",W_LSR)
 print("mean weight = ", np.mean(np.mean(np.abs(W_LSR))))
-
+'''
 # (IV) plot data
 ymin,ymax = -50.0,150.0                     # interval of y data
 x_=np.arange(xmin,xmax,0.01)                # densely sampled x values
@@ -84,3 +74,4 @@ ax.set_ylabel('y')                                           # label on y-axis
 ax.grid()                                                    # draw a grid
 plt.ylim((ymin,ymax))                                        # set y-limits
 plt.show()                                                   # show plot on screen
+'''
