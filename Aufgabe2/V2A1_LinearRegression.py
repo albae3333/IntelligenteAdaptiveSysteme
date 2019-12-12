@@ -33,8 +33,8 @@ X_test,T_test = generateDataSet(N, xmin,xmax, sd_noise)             # generate t
 print("X=",X, "T=",T)
 
 # (II) generate linear least squares model for regression
-lmbda=0                                                           # no regression
-deg=9                                                             # degree of polynomial basis functions
+lmbda=0.0000000001                                                           # no regression
+deg=9                                                            # degree of polynomial basis functions
 N,D = np.shape(X)                                                 # shape of data matrix X
 N,K = np.shape(T)                                                 # shape of target value matrix T
 PHI = np.array([phi_polynomial(X[i],deg).T for i in range(N)])    # generate design matrix
@@ -47,7 +47,7 @@ print("\n\nPHI_test=\n", PHI_test)
 print("PHI=", PHI)
 print("PHI_test=", PHI_test)
 
-W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)),PHI.T),T) # calc weights
+W_LSR = np.dot(np.dot(np.linalg.inv(np.dot(PHI.T, PHI)+lmbda*np.eye(N)),PHI.T),T) # calc weights
 
 # (III) make predictions for training and test data
 Y_train = [np.dot(W_LSR.T, PHI[i]) for i in range(N)]       # calc Diskriminanzwert for train data
