@@ -52,7 +52,7 @@ class Regressifier:
         for idxTest in idxS:                                # loop over all possible test data sets
             # (i) generate training and testing data sets and train classifier        
             idxLearn = [i for i in range(N) if i not in idxTest]                      # remaining indices (not in idxTest) are learning data
-            if(S<=1): idxLearn=idxTest                                                # if S==1 use entire data set for learning and testing
+               if(S<=1): idxLearn=idxTest                                                # if S==1 use entire data set for learning and testing
             X_learn, T_learn = np.array([X1[i] for i in idxLearn]), np.array([T1[i] for i in idxLearn]) # learn data 
             X_test , T_test  = np.array([X1[i] for i in idxTest ]), np.array([T1[i] for i in idxTest ]) # test data 
             self.fit(X_learn,T_learn)                       # train regressifier
