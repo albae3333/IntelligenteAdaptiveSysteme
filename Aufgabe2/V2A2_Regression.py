@@ -130,7 +130,7 @@ class DataScaler:
         """
         print standardization parameters (mean value, standard deviation (std), and inverse of std)  
         """
-        print("mean=",self.meanX, " std=",self.stdX, " std_inv=",self.stdXinv)
+        print("\nmean=",self.meanX, "\nstd=",self.stdX, "\nstd_inv=",self.stdXinv)
 
 
 # ----------------------------------------------------------------------------------------- 
@@ -225,7 +225,7 @@ class LSRRegressifier(Regressifier):
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
         except: 
             flagOK=0;
-            print("EXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, " maxZ=", maxZ)
+            print("\nEXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, "\nmaxZ=", maxZ)
             raise
         return flagOK 
 
@@ -320,14 +320,14 @@ if __name__ == '__main__':
     sd_noise = 1.0            # noise power (=standard deviation)
     T=T+w1*X+w0 + np.random.normal(0,sd_noise,T.shape)  # generate noisy target values on line y=w0+w1*x
     par_lambda = 0            # regularization parameter
-    print("X=",X)
-    print("T=",T)
+    print("X=\n",X)
+    print("T=\n",T)
 
     # (ii) define basis functions (phi should return list of basis functions; x should be a list)
     deg=2;                               # degree of polynomial
     phi=lambda x: phi_polynomial(x,2)    # define phi by polynomial basis-functions up to degree deg 
-    print("phi(4)=", phi([4]))           # print basis function vector [1, x, x*x ...] for x=4
-    print("phi([1,2])=", phi([1,2]))     # print basis function vector for two-dim. inputs (yields many output components) 
+    print("\nphi(4)=", phi([4]))           # print basis function vector [1, x, x*x ...] for x=4
+    print("\nphi([1,2])=", phi([1,2]))     # print basis function vector for two-dim. inputs (yields many output components)
 
     # (iii) compute LSR regression
     print("\n-----------------------------------------")
@@ -338,12 +338,12 @@ if __name__ == '__main__':
     lsr.fit(X,T)
     print("lsr.W_LSR=",lsr.W_LSR)        # weight vector (should be approximately [w0,w1]=[4,2])
     x=np.array([3.1415]).T
-    print("prediction of x=",x,"is y=",lsr.predict(x))
+    print("\nprediction of x=",x,"is y=",lsr.predict(x))
 
     # do S-fold crossvalidation
     S=3
     err_abs,err_rel = lsr.crossvalidate(S,X,T)
-    print("LSRRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel)
+    print("\nLSRRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "\nrelative errors (E,sd,min,max)=", err_rel)
 
     # (iv) compute KNN-regression
     print("\n-----------------------------------------")
@@ -356,6 +356,4 @@ if __name__ == '__main__':
 
     # do S-fold crossvalidation
     err_abs,err_rel = knnr.crossvalidate(S,X,T)
-    print("KNNRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "  relative errors (E,sd,min,max)=", err_rel)
-
-
+    print("\nKNNRegression cross-validation: absolute errors (E,sd,min,max)=", err_abs, "\nrelative errors (E,sd,min,max)=", err_rel)
