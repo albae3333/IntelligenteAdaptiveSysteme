@@ -1,0 +1,13 @@
+V2A2 
+b) 1)	Die Funktion berechnet alle Basisfunktionen vom Grad ged und darunter.
+	Bei konkreten Datenvektor x berechnet sie also den Merkmalsvektor dazu.
+	phi_polynomial([3],5) = [1, 3, 3*3, 3*3*3, 3*3*3*3, 3*3*3*3*3]
+	phi_polynomial([3,5],2) = [1, 3, 5, 3*3, 5*5, 3*5]
+      
+	phi_polynomial([x1,x2],2) = [1, x1, x2, x1*x1, x2*x2, x1*x2]
+      
+	Diese Funktion bietet die Basisfunktionen für unsere Designmatrix. 
+	Durch die Designmatrix kann ein Datenvektor in die den Merkmalsraum abgebildet werden.
+	Im Merkmalsraum ist es einfacher die Entscheidungskurve zu wählen.
+
+	Die Funktion kann bis zum Grad deg = 2 Basisfunktionen berechnen.
