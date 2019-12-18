@@ -3,3 +3,36 @@ Danach werden die Basisfunktionen mit der Funktion phi_polynomial berechnet, im 
 Jetzt werden die zwei Modelle LSRRegressifier und KNNRegressifier initialisiert und angelernt.
 Für beide Modelle wird eine Kreuzvalidierung durchgeführt und die Fehlerwerte ausgegeben.
 
+Unsere gelerneten Gewichte sind:
+lsr.W_LSR= [[ 3.73418823e+00]
+ [ 2.04051917e+00]
+ [-8.25252751e-04]]
+Die Prädiktionsfunktion ist:
+y = -8.25252751e-04*x^2 + 2.04051917e+00*x + 3.73418823e+00*1
+Idealerweise sollten sich die Gewichte lsr.W_LSR = [[4, 2, 0]] ergeben.
+
+LSRRegression cross-validation: absolute errors (E,sd,min,max)= (0.7660860395696746, 0.5900087313519528, 0.006515049199251166, 2.227130930499861)
+relative errors (E,sd,min,max)= (0.028796647752206875, 0.04781836177573257, 6.793873008742307e-05, 0.28224981328103843)
+Die Kreuzvalidierung liefert die absoluten und relative Fehlerwerte, sowie deren Standard
+Abweichung, min und max Werte zurück. Die Werte sehen relativ gut aus, eine größte relative Abweichung von 0.3 ist für die
+meisten Anwendungen asureichend.
+
+Mit K=10 und par_lambda = 0 liefert der LSRRegressifier die Werte:
+LSRRegression cross-validation: absolute errors (E,sd,min,max)= (0.8597089760670608, 0.6403803564590692, 0.005025820611100684, 2.857493268601548)
+relative errors (E,sd,min,max)= (0.027379641599138325, 0.03631720302957181, 0.00011038777225487935, 0.20739082716214072)
+
+und der KNNRegressifier die Werte:
+KNNRegression cross-validation: absolute errors (E,sd,min,max)= (1.717223281796141, 1.564594925434794, 0.0002571110364115725, 8.647573113483006)
+relative errors (E,sd,min,max)= (0.0868670512340715, 0.2288755949103437, 5.15202572069746e-06, 1.6918083397608543)
+
+Man sieht, dass der LSRRegressifier insgesamt bessere Erwartungswerte erreicht, vor allem bei max Werten, allerdings ist der
+KNNRegressifier besser bei den min Werten.
+
+Dies setzt sich auch bei par_lambda = 1 fort. Der KNNRegressifier verschlechtert sich deutlich, wohingegen sich der LSRRegressifier
+etwas verbessert.
+
+LSRRegression cross-validation: absolute errors (E,sd,min,max)= (0.7682693957567832, 0.5677371058458509, 0.004398599487252852, 2.436894064558473)
+relative errors (E,sd,min,max)= (0.028255394294617975, 0.044610845452939744, 7.992813956270293e-05, 0.2364746945418531)
+
+KNNRegression cross-validation: absolute errors (E,sd,min,max)= (1.7084453349638355, 2.121541818497089, 0.01208503176255249, 10.60417933325067)
+relative errors (E,sd,min,max)= (0.10553757168037359, 0.3664398037917776, 0.0002018586070794534, 2.891788733683033)

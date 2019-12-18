@@ -196,8 +196,8 @@ class LSRRegressifier(Regressifier):
         """
         self.lmbda=lmbda       # set regression parameter (default 0)
         self.phi=phi           # set basis functions used for linear regression (default: degree 1 polynomials)
-        self.flagSTD=flagSTD;  # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
-        self.eps=eps;          # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
+        self.flagSTD=flagSTD   # if flag >0 then data will be standardized, i.e., scaled for mean 0 and s.d. 1
+        self.eps=eps           # maximal residual value to tolerate (instead of zero) for numerically good conditioned problems
 
 
     def fit(self,X,T,lmbda=None,phi=None,flagSTD=None): # train/compute LS regression with data matrix X and target value matrix T
@@ -330,9 +330,9 @@ if __name__ == '__main__':
     T=np.zeros((N,1))         # target values: allocate Nx1 matrix as numpy ndarray
     sd_noise = 1.0            # noise power (=standard deviation)
     T=T+w1*X+w0 + np.random.normal(0,sd_noise,T.shape)  # generate noisy target values on line y=w0+w1*x
-    par_lambda = 0            # regularization parameter
-    print("X=\n",X)
-    print("T=\n",T)
+    par_lambda = 1            # regularization parameter
+    #print("X=\n",X)
+    #print("T=\n",T)
 
     # (ii) define basis functions (phi should return list of basis functions; x should be a list)
     deg=2                                  # degree of polynomial
@@ -344,7 +344,7 @@ if __name__ == '__main__':
     print("\n-----------------------------------------")
     print("Do a Least-Squares-Regression")
     print("-----------------------------------------")
-    lmbda=0;
+    lmbda=par_lambda
     lsr = LSRRegressifier(lmbda,phi)
     lsr.fit(X,T)
     print("lsr.W_LSR=",lsr.W_LSR)        # weight vector (should be approximately [w0,w1]=[4,2])
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     print("\n-----------------------------------------")
     print("Do a KNN-Regression")
     print("-----------------------------------------")
-    K=5;
+    K=10
     knnr = KNNRegressifier(K)
     knnr.fit(X,T)
     print("prediction of x=",x,"is y=",knnr.predict(x))
