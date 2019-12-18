@@ -5,6 +5,7 @@
 import numpy as np
 import scipy.spatial
 from random import randint
+from numpy.linalg import inv
 
 # ----------------------------------------------------------------------------------------- 
 # base class for regressifiers
@@ -225,16 +226,16 @@ class LSRRegressifier(Regressifier):
             self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
             self.M = self.phi(self.D*[0]).size # get number of basis functions  
             self.K = T.shape[1]                # DELTE dummy code (just required for dummy code in predict(.): number of output dimensions
-            PHI =                          # REPLACE dummy code: compute design matrix
-            PHIT_PHI_lmbdaI = None             # REPLACE dummy code: compute PHI_T*PHI+lambda*I
-            PHIT_PHI_lmbdaI_inv = None         # REPLACE dummy code: compute inverse matrix (may be bad conditioned and fail)
-            self.W_LSR = None                  # REPLACE dummy code: compute regularized least squares weights 
+            PHI = [phi(X[i]) for i in range(self.N)]                            # compute design matrix
+            PHIT_PHI_lmbdaI = np.dot(np.transpose(PHI),PHI)+lmbda*np.eye(self.D)        # compute PHI_T*PHI+lambda*I
+            PHIT_PHI_lmbdaI_inv = inv(PHIT_PHI_lmbdaI)                           # compute inverse matrix (may be bad conditioned and fail)
+            self.W_LSR = np.dot(np.dot(PHIT_PHI_lmbdaI_inv, np.transpose(PHI)), T)            # compute regularized least squares weights 
             # (iv) check numerical condition
             Z=None                             # REPLACE dummy code: Compute Z:=PHIT_PHI_lmbdaI*PHIT_PHI_lmbdaI_inv-I which should become the zero matrix if good conditioned!
             maxZ = 0                           # REPLACE dummy code: Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
         except: 
-            flagOK=0;
+            flagOK=0
             print("\nEXCEPTION DUE TO BAD CONDITION:flagOK=", flagOK, "\nmaxZ=", maxZ)
             raise
         return flagOK 
@@ -249,7 +250,7 @@ class LSRRegressifier(Regressifier):
         if flagSTD==None: flagSTD=self.flagSTD      # standardization?
         if flagSTD>0: x=self.datascalerX.scale(x)   # if yes, then scale x before computing the prediction!
         phi_of_x = self.phi(x)                      # compute feature vector phi_of_x for data vector x
-        y=np.zeros((1,self.K)).T                    # REPLACE dummy code:  compute prediction y for data vector x 
+        y=np.dot(phi_of_x, self.W_LSR)                    # compute prediction y for data vector x 
         if flagSTD>0: y=self.datascalerT.unscale(y) # scale prediction back to original range?
         return y                  # return prediction y for data vector x
 
@@ -334,8 +335,8 @@ if __name__ == '__main__':
     print("T=\n",T)
 
     # (ii) define basis functions (phi should return list of basis functions; x should be a list)
-    deg=2;                               # degree of polynomial
-    phi=lambda x: phi_polynomial(x,2)    # define phi by polynomial basis-functions up to degree deg 
+    deg=2                                  # degree of polynomial
+    phi=lambda x: phi_polynomial(x,deg)    # define phi by polynomial basis-functions up to degree deg 
     print("\nphi(4)=", phi([4]))           # print basis function vector [1, x, x*x ...] for x=4
     print("\nphi([1,2])=", phi([1,2]))     # print basis function vector for two-dim. inputs (yields many output components)
 
