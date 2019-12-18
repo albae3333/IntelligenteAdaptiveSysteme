@@ -1,0 +1,5 @@
+Im Modultest werden Lerndaten mit entsprechenden Labels generiert.
+Danach werden die Basisfunktionen mit der Funktion phi_polynomial berechnet, im Beispiel bis zum Grad deg = 2.
+Jetzt werden die zwei Modelle LSRRegressifier und KNNRegressifier initialisiert und angelernt.
+Für beide Modelle wird eine Kreuzvalidierung durchgeführt und die Fehlerwerte ausgegeben.
+

@@ -146,7 +146,7 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
     """
     x=np.array(np.mat(x))[0]           # ensure that x is a 1D array (first row of x)
     D=len(x)
-    assert (D==1) or ((D>1) and (deg<=3)), "phi_polynomial(x,deg) not implemented for D="+str(D)+" and deg="+str(deg)    # MODIFY CODE HERE FOR deg>3 !!!!
+    assert (D==1) or ((D>1) and (deg<=5)), "phi_polynomial(x,deg) not implemented for D="+str(D)+" and deg="+str(deg)
     if(D==1):
         phi = np.array([x[0]**i for i in range(deg+1)])
     else:
@@ -162,7 +162,17 @@ def phi_polynomial(x,deg=1):           # x should be list or np.array or 1xD mat
                         for i in range(D):
                             for j in range(i+1):
                                 phi = np.concatenate(( phi, [x[i]*x[j]*x[k] for k in range(j+1)] ))   # include degree 3 terms
-                        # EXTEND CODE HERE FOR deg>3!!!!
+                        if(deg>=4):
+                            for i in range(D):
+                                for j in range(i+1):
+                                    for k in range(j+1):
+                                        phi = np.concatenate(( phi, [x[i]*x[j]*x[k]*x[l] for l in range(k+1)] ))   # include degree 4 terms
+                            if(deg>=5):
+                                for i in range(D):
+                                    for j in range(i+1):
+                                        for k in range(j+1):
+                                            for l in range(k+1):
+                                               phi = np.concatenate(( phi, [x[i]*x[j]*x[k]*x[l]*x[m] for m in range(l+1)] ))   # include degree 5 terms
     return phi.T  # return basis function vector (=feature vector corresponding to data vector x)
 
 
@@ -215,7 +225,7 @@ class LSRRegressifier(Regressifier):
             self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
             self.M = self.phi(self.D*[0]).size # get number of basis functions  
             self.K = T.shape[1]                # DELTE dummy code (just required for dummy code in predict(.): number of output dimensions
-            PHI = None                         # REPLACE dummy code: compute design matrix
+            PHI =                          # REPLACE dummy code: compute design matrix
             PHIT_PHI_lmbdaI = None             # REPLACE dummy code: compute PHI_T*PHI+lambda*I
             PHIT_PHI_lmbdaI_inv = None         # REPLACE dummy code: compute inverse matrix (may be bad conditioned and fail)
             self.W_LSR = None                  # REPLACE dummy code: compute regularized least squares weights 
@@ -296,7 +306,7 @@ class KNNRegressifier(Regressifier):
             t_out=np.mean([self.T[i] for i in idxNN])
         else:
             # do a linear regression of the KNNs
-            lsr=LSRegressifier(lmbda=0.0001,phi=lambda x:phi_polynomial(x,1),flagSTD=1)
+            lsr=LSRRegressifier(lmbda=0.0001,phi=lambda x:phi_polynomial(x,1),flagSTD=1)
             lsr.fit(self.X[idxNN],self.T[idxNN])
             t_out=lsr.predict(x)
         return t_out
