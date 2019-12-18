@@ -226,13 +226,13 @@ class LSRRegressifier(Regressifier):
             self.N,self.D = X.shape            # data matrix X has size N x D (N is number of data vectors, D is dimension of a vector)
             self.M = self.phi(self.D*[0]).size # get number of basis functions  
             self.K = T.shape[1]                # DELTE dummy code (just required for dummy code in predict(.): number of output dimensions
-            PHI = [phi(X[i]) for i in range(self.N)]                            # compute design matrix
+            PHI = [phi(X[i]) for i in range(self.N)]                                    # compute design matrix
             PHIT_PHI_lmbdaI = np.dot(np.transpose(PHI),PHI)+lmbda*np.eye(self.D)        # compute PHI_T*PHI+lambda*I
-            PHIT_PHI_lmbdaI_inv = inv(PHIT_PHI_lmbdaI)                           # compute inverse matrix (may be bad conditioned and fail)
-            self.W_LSR = np.dot(np.dot(PHIT_PHI_lmbdaI_inv, np.transpose(PHI)), T)            # compute regularized least squares weights 
+            PHIT_PHI_lmbdaI_inv = inv(PHIT_PHI_lmbdaI)                                  # compute inverse matrix (may be bad conditioned and fail)
+            self.W_LSR = np.dot(np.dot(PHIT_PHI_lmbdaI_inv, np.transpose(PHI)), T)      # compute regularized least squares weights 
             # (iv) check numerical condition
-            Z=None                             # REPLACE dummy code: Compute Z:=PHIT_PHI_lmbdaI*PHIT_PHI_lmbdaI_inv-I which should become the zero matrix if good conditioned!
-            maxZ = 0                           # REPLACE dummy code: Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
+            Z=np.dot(PHIT_PHI_lmbdaI, PHIT_PHI_lmbdaI_inv-np.eye(self.D))               # Compute Z:=PHIT_PHI_lmbdaI*PHIT_PHI_lmbdaI_inv-I which should become the zero matrix if good conditioned!
+            maxZ = max([max(Z[i]) for i in range(len(Z[0]))])                           # Compute maximum (absolute) componente of matrix Z (should be <eps for good conditioned problem)
             assert maxZ<=self.eps              # maxZ should be <eps for good conditioned problems (otherwise the result cannot be trusted!!!)
         except: 
             flagOK=0
